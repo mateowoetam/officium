@@ -1,0 +1,4 @@
+repositoryID: officium-oci
+owners: # (optional, used to claim repository ownership)
+  - name: Mateo Orlaineta
+    email: mateowoetam@proton.me

@@ -1,0 +1,59 @@
+
+[![Build container image](https://github.com/mateowoetam/officium/actions/workflows/build.yml/badge.svg)](https://github.com/mateowoetam/officium/actions/workflows/build.yml)
+
+<h1 align="center">
+    <img align="center" width=150 src="icon.png" />
+    <br><br>
+    Officium
+</h1>
+<p align="center">
+  <strong>bootc image</strong>
+</p>
+<p align="center">
+   - Universal Blue - </i>
+</p>
+
+## 📖 Description
+
+- Custom Image, based on [ublue-os/kinoite-main](https://github.com/ublue-os/main)
+- Fedora Atomic Base with Selinux activated
+- Install and use any linux binary with native [distrobox](https://distrobox.it/)
+- Utilizes [Doas](https://man.openbsd.org/doas) instead of `sudo` for streamlined superuser privileges.
+- Employs [Dash](https://es.wikipedia.org/wiki/Debian_Almquist_Shell) as the default login shell for speed.
+
+## Advantages over classic Fedora
+
+- Isolated applications with [flatpak](https://docs.flatpak.org/en/latest/basic-concepts.html)
+- [Cloud-Native](https://en.wikipedia.org/wiki/Cloud-native_computing) immutable spin powered by [bootc](https://github.com/bootc-dev/bootc)
+- Rock solid stable with fresh packets
+- Latest Nvidia Drivers
+- Easy rollback and rebase
+- [RPM-fusion](https://rpmfusion.org/) enabled by default
+- [Flathub](https://flathub.org/en/about) enabled by default
+- Multimedia Codecs
+- Netcloud client Flatpak preinstalled
+
+## Installation
+
+> **Note** : This image is experimental and build for testing pruposes, contact me if you want to adapt.  
+
+Rebase from any Fedora Atomic based distro :
+
+```
+sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/mateowoetam/officium-base:latest
+```
+
+For the Nvidia enable image run this:
+```
+sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/mateowoetam/officium-nvidia:latest
+```
+
+```
+
+[![Copie-d-ecran-20251029-080825.png](https://i.postimg.cc/NjLZfJHy/Copie-d-ecran-20251029-080825.png)](https://postimg.cc/JsVppQKm)
+
+-----
+
+- Special Thanks to [#Universal-Blue](https://github.com/ublue-os) and their efforts to improve Linux Desktop.
+- Thanks to [#Fedora](https://fedoraproject.org/fr/) and the [#atomic-project](https://fedoramagazine.org/introducing-fedora-atomic-desktops/) upstream
+- If you have time, check out [#Bluefin](https://projectbluefin.io/) or [#Bazzite](https://bazzite.gg/) and support them.
