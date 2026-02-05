@@ -10,7 +10,7 @@
   <strong>bootc image</strong>
 </p>
 <p align="center">
-   - Universal Blue - </i>
+   - Universal Blue Simple Rice - </i>
 </p>
 
 ## 📖 Description
