@@ -9,6 +9,7 @@ org.fkoehler.KTailctl \
 org.deskflow.deskflow \
 org.gnome.DejaDup \
 org.kde.haruna \
+org.mozilla.Thunderbird \
 org.mozilla.firefox;do
 if flatpak info "$app" >/dev/null 2>&1;then
 flatpak remove -y "$app"

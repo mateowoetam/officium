@@ -1,0 +1,9 @@
+[General]
+showlogo=hidden
+showClock=true
+logo=${KDE_INSTALL_FULL_DATADIR}/sddm/themes/breeze/default-logo.svg
+type=image
+color=#1d99f3
+fontSize=10
+background=${KDE_INSTALL_FULL_WALLPAPERDIR}/Deseret/contents/images/4240x2832.png
+needsFullUserModel=false

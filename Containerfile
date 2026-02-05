@@ -40,5 +40,12 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 
 COPY system_files /
 
+# Set Deseret as default wallpaper
+RUN set -eux; \
+    mkdir -p /usr/share/backgrounds; \
+    ln -sf /usr/share/wallpapers/Deseret/contents/images/4240x2832.jxl /usr/share/backgrounds/default.jxl; \
+    ln -sf /usr/share/wallpapers/Deseret/contents/images/4240x2832.jxl /usr/share/backgrounds/default-dark.jxl
+
+
 # Final health check for bootc compatibility
 RUN bootc container lint

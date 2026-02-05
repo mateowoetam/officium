@@ -11,7 +11,7 @@ dnf install -y $DNF_OPTS \
 dnf install -y $DNF_OPTS \
 libavcodec-freeworld \
 VK_hdr_layer \
-opendoas dash fish fastfetch gamescope wine alacritty thunderbird
+opendoas dash fish fastfetch gamescope wine alacritty thunderbird libjxl
 dnf config-manager addrepo \
 --from-repofile=https://repo.librewolf.net/librewolf.repo
 dnf install -y $DNF_OPTS librewolf
