@@ -1,111 +1,56 @@
-#!/bin/bash
-
-set -ouex pipefail
-
+#!/usr/bin/env bash
+set -euo pipefail
+echo "[INFO] Installing NVIDIA stack for immutable bootc image..."
 FRELEASE="$(rpm -E %fedora)"
-: "${AKMODNV_PATH:=/tmp/akmods-rpms}"
-
-# this is only to aid in human understanding of any issues in CI
-find "${AKMODNV_PATH}"/
-
-if ! command -v dnf5 >/dev/null; then
-    echo "Requires dnf5... Exiting"
-    exit 1
-fi
-
-# Check if any rpmfusion repos exist before trying to disable them
-if dnf5 repolist --all | grep -q rpmfusion; then
-    dnf5 config-manager setopt "rpmfusion*".enabled=0
-fi
-
-# Always try to disable cisco repo (or add similar check)
-dnf5 config-manager setopt fedora-cisco-openh264.enabled=0
-
-## nvidia install steps
-dnf5 install -y "${AKMODNV_PATH}"/ublue-os/ublue-os-nvidia-addons-*.rpm
-
-# Install MULTILIB packages from negativo17-multimedia prior to disabling repo
-
-MULTILIB=(
-    mesa-dri-drivers.i686
-    mesa-filesystem.i686
-    mesa-libEGL.i686
-    mesa-libGL.i686
-    mesa-libgbm.i686
-    mesa-va-drivers.i686
-    mesa-vulkan-drivers.i686
-)
-
-dnf5 install -y "${MULTILIB[@]}"
-
-# enable repos provided by ublue-os-nvidia-addons (not enabling fedora-nvidia-lts)
-dnf5 config-manager setopt fedora-nvidia.enabled=1 nvidia-container-toolkit.enabled=1
-
-# Disable Multimedia
-NEGATIVO17_MULT_PREV_ENABLED=N
-if dnf5 repolist --enabled | grep -q "fedora-multimedia"; then
-    NEGATIVO17_MULT_PREV_ENABLED=Y
-    echo "disabling negativo17-fedora-multimedia to ensure negativo17-fedora-nvidia is used"
-    dnf5 config-manager setopt fedora-multimedia.enabled=0
-fi
-
-# Enable staging for supergfxctl if repo file exists
-if [[ -f /etc/yum.repos.d/_copr_ublue-os-staging.repo ]]; then
-    sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/_copr_ublue-os-staging.repo
-else
-    # Otherwise, retrieve the repo file for staging
-    curl -Lo /etc/yum.repos.d/_copr_ublue-os-staging.repo https://copr.fedorainfracloud.org/coprs/ublue-os/staging/repo/fedora-"${FRELEASE}"/ublue-os-staging-fedora-"${FRELEASE}".repo
-fi
-
-source "${AKMODNV_PATH}"/kmods/nvidia-vars
-
-if [[ "${IMAGE_NAME}" == "kinoite" ]]; then
-    VARIANT_PKGS="supergfxctl-plasmoid supergfxctl"
-elif [[ "${IMAGE_NAME}" == "silverblue" ]]; then
-    VARIANT_PKGS="gnome-shell-extension-supergfxctl-gex supergfxctl"
-else
-    VARIANT_PKGS=""
-fi
-
+echo "[INFO] Adding RPM Fusion repositories..."
 dnf5 install -y \
-    libnvidia-fbc \
-    libnvidia-ml.i686 \
-    libva-nvidia-driver \
-    nvidia-driver \
-    nvidia-driver-cuda \
-    nvidia-driver-cuda-libs.i686 \
-    nvidia-driver-libs.i686 \
-    nvidia-settings \
-    nvidia-container-toolkit \
-    ${VARIANT_PKGS} \
-    "${AKMODNV_PATH}"/kmods/kmod-nvidia-"${KERNEL_VERSION}"-"${NVIDIA_AKMOD_VERSION}"."${DIST_ARCH}".rpm
-
-# Ensure the version of the Nvidia module matches the driver
-KMOD_VERSION="$(rpm -q --queryformat '%{VERSION}' kmod-nvidia)"
-DRIVER_VERSION="$(rpm -q --queryformat '%{VERSION}' nvidia-driver)"
-if [ "$KMOD_VERSION" != "$DRIVER_VERSION" ]; then
-    echo "Error: kmod-nvidia version ($KMOD_VERSION) does not match nvidia-driver version ($DRIVER_VERSION)"
-    exit 1
+"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$FRELEASE.noarch.rpm" \
+"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$FRELEASE.noarch.rpm"
+echo "[INFO] Adding NVIDIA container toolkit repository..."
+curl -fsSL https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo \
+-o /etc/yum.repos.d/nvidia-container-toolkit.repo
+echo "[INFO] Refreshing metadata..."
+dnf5 -y makecache
+echo "[INFO] Installing NVIDIA driver packages..."
+NVIDIA_PACKAGES=(
+akmod-nvidia
+xorg-x11-drv-nvidia
+xorg-x11-drv-nvidia-cuda
+xorg-x11-drv-nvidia-libs
+xorg-x11-drv-nvidia-libs.i686
+nvidia-modprobe
+nvidia-persistenced
+libva-nvidia-driver
+nvidia-container-toolkit)
+MESA_MULTILIB=(
+mesa-dri-drivers.i686
+mesa-libGL.i686
+mesa-libEGL.i686
+mesa-vulkan-drivers.i686)
+dnf5 install -y "${NVIDIA_PACKAGES[@]}"
+dnf5 install -y "${MESA_MULTILIB[@]}"
+echo "[INFO] Configuring dracut NVIDIA module loading..."
+mkdir -p /usr/lib/dracut.conf.d
+cat >/usr/lib/dracut.conf.d/10-nvidia.conf <<'EOF'
+add_drivers+=" nvidia nvidia_modeset nvidia_uvm nvidia_drm "
+EOF
+echo "[INFO] Blacklisting nouveau..."
+mkdir -p /usr/lib/modprobe.d
+cat >/usr/lib/modprobe.d/officium-nvidia.conf <<'EOF'
+blacklist nouveau
+options nouveau modeset=0
+EOF
+echo "[INFO] Enabling NVIDIA services..."
+systemctl enable nvidia-persistenced.service||true
+systemctl enable nvidia-container-toolkit.service||true
+if [[ -f /usr/share/selinux/packages/nvidia-container.pp ]];then
+echo "[INFO] Installing NVIDIA SELinux module..."
+semodule --install /usr/share/selinux/packages/nvidia-container.pp||true
 fi
-
-## nvidia post-install steps
-# disable repos provided by ublue-os-nvidia-addons
-dnf5 config-manager setopt fedora-nvidia.enabled=0 fedora-nvidia-lts.enabled=0 nvidia-container-toolkit.enabled=0
-
-# Disable staging
-sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/_copr_ublue-os-staging.repo
-
-systemctl enable ublue-nvctk-cdi.service
-semodule --verbose --install /usr/share/selinux/packages/nvidia-container.pp
-
-# Universal Blue specific Initramfs fixes
-cp /etc/modprobe.d/nvidia-modeset.conf /usr/lib/modprobe.d/nvidia-modeset.conf
-# we must force driver load to fix black screen on boot for nvidia desktops
-sed -i 's@omit_drivers@force_drivers@g' /usr/lib/dracut/dracut.conf.d/99-nvidia.conf
-# as we need forced load, also mustpre-load intel/amd iGPU else chromium web browsers fail to use hardware acceleration
-sed -i 's@ nvidia @ i915 amdgpu nvidia @g' /usr/lib/dracut/dracut.conf.d/99-nvidia.conf
-
-# re-enable negativo17-mutlimedia since we disabled it
-if [[ "${NEGATIVO17_MULT_PREV_ENABLED}" = "Y" ]]; then
-    dnf5 config-manager setopt fedora-multimedia.enabled=1
-fi
+echo "[INFO] Removing temporary repositories..."
+rm -f /etc/yum.repos.d/rpmfusion-*.repo
+rm -f /etc/yum.repos.d/nvidia-container-toolkit.repo
+echo "[INFO] Cleaning package metadata..."
+dnf5 clean all
+rm -rf /var/cache/dnf /var/cache/yum /var/tmp/*
+echo "[INFO] NVIDIA stack installation complete."

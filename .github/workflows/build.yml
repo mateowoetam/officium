@@ -36,7 +36,7 @@ jobs:
       matrix:
         container:
           - { name: 'base', base_image: 'ghcr.io/ublue-os/kinoite-main:latest' }
-          - { name: 'nvidia', base_image: 'ghcr.io/ublue-os/kinoite-nvidia:latest' }
+          - { name: 'nvidia', base_image: 'ghcr.io/ublue-os/kinoite-main:latest' }
 
     steps:
 

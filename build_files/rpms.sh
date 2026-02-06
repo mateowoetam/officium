@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eu
 FEDORA_VERSION=$(rpm -E %fedora)
 DNF_OPTS="--setopt=tsflags=nodocs --setopt=install_weak_deps=False"

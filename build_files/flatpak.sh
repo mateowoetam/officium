@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eu
 flatpak remote-add --if-not-exists \
 flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -22,6 +22,7 @@ com.belmoussaoui.Authenticator \
 org.libreoffice.LibreOffice \
 com.nextcloud.desktopclient.nextcloud \
 org.localsend.localsend_app \
+app.comaps.comaps \
 org.kde.elisa \
 org.videolan.VLC
 flatpak uninstall --unused -y||true

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eu
 cat >/etc/doas.conf <<'EOF'
 permit setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS } :wheel

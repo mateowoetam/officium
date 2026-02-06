@@ -38,6 +38,39 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
         fi \
     done
 
+# -----------------------------------------------------------------------------
+# NVIDIA VARIANT
+# -----------------------------------------------------------------------------
+
+RUN --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/tmp \
+    if [ "$VARIANT" = "nvidia" ]; then \
+        dnf5 config-manager unsetopt skip_if_unavailable && \
+        dnf5 -y remove \
+            nvidia-gpu-firmware \
+            rocm-hip \
+            rocm-opencl \
+            rocm-clinfo \
+            rocm-smi && \
+        /ctx/cleanup; \
+    fi
+
+RUN --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=secret,id=GITHUB_TOKEN \
+    --mount=type=bind,from=nvidia,src=/,dst=/rpms/nvidia \
+    if [ "$VARIANT" = "nvidia" ]; then \
+        dnf5 -y copr enable ublue-os/staging && \
+        dnf5 -y install \
+            egl-wayland.x86_64 \
+            egl-wayland.i686 && \
+        /ctx/nvidia.sh && \
+    fi
+
 COPY system_files /
 
 # Set Deseret as default wallpaper
