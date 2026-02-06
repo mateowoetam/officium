@@ -30,46 +30,35 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,target=/var/lib/dnf \
     --mount=type=cache,target=/var/log \
     --mount=type=tmpfs,target=/tmp \
-
+    set -eux; \
+    \
+    # Run common build scripts
     for script in rpms.sh flatpak.sh system-config.sh services.sh custom.sh; do \
         if [ -f "/ctx/$script" ]; then \
-            install -m755 "/ctx/$script" "/tmp/$script" && \
-            sh "/tmp/$script"; \
-        fi \
-    done
-
-# -----------------------------------------------------------------------------
-# NVIDIA VARIANT
-# -----------------------------------------------------------------------------
-
-RUN --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=tmpfs,dst=/tmp \
+            install -m755 "/ctx/$script" "/tmp/$script"; \
+            bash "/tmp/$script"; \
+        fi; \
+    done; \
+    \
+    # NVIDIA variant stage
     if [ "$VARIANT" = "nvidia" ]; then \
-        dnf5 config-manager unsetopt skip_if_unavailable && \
+        dnf5 config-manager unsetopt skip_if_unavailable; \
         dnf5 -y remove \
             nvidia-gpu-firmware \
             rocm-hip \
             rocm-opencl \
             rocm-clinfo \
-            rocm-smi && \
-        /ctx/cleanup; \
-    fi
-
-RUN --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=tmpfs,dst=/tmp \
-    --mount=type=secret,id=GITHUB_TOKEN \
-    --mount=type=bind,from=nvidia,src=/,dst=/rpms/nvidia \
-    if [ "$VARIANT" = "nvidia" ]; then \
-        dnf5 -y copr enable ublue-os/staging && \
+            rocm-smi; \
+        \
+        dnf5 -y copr enable ublue-os/staging; \
         dnf5 -y install \
             egl-wayland.x86_64 \
-            egl-wayland.i686 && \
-        /ctx/nvidia.sh && \
+            egl-wayland.i686; \
+        \
+        install -m755 "/ctx/nvidia.sh" "/tmp/nvidia.sh"; \
+        bash "/tmp/nvidia.sh"; \
     fi
+
 
 COPY system_files /
 
