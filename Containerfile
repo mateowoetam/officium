@@ -18,7 +18,7 @@ LABEL \
     org.opencontainers.image.description="Officium OS (${VARIANT})" \
     org.opencontainers.image.variant="${VARIANT}" \
     org.opencontainers.image.source="https://github.com/mateowoetam/officium" \
-    org.opencontainers.image.licenses="Apache-2.0"
+    org.opencontainers.image.licenses="AGPL-3.0 license"
 
 # Clean up opt and prepare directories
 RUN rm -rf /opt && mkdir -p /opt

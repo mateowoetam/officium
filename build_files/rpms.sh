@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
-set -eu
-FEDORA_VERSION=$(rpm -E %fedora)
+set -euo pipefail
+FEDORA_VERSION="$(rpm -E %fedora)"
 DNF_OPTS="--setopt=tsflags=nodocs --setopt=install_weak_deps=False"
-dnf remove -y \
+dnf5 remove -y \
 firefox htop nvtop kfind krfb kcharselect kde-connect \
 kwalletmanager kdebugsettings plasma-discover okular fcitx5||true
-dnf install -y $DNF_OPTS \
+dnf5 install -y $DNF_OPTS \
 "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$FEDORA_VERSION.noarch.rpm" \
 "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$FEDORA_VERSION.noarch.rpm"
-dnf install -y $DNF_OPTS \
+dnf5 install -y $DNF_OPTS \
 libavcodec-freeworld \
 VK_hdr_layer \
 opendoas dash fish fastfetch gamescope wine alacritty thunderbird libjxl
-dnf config-manager addrepo \
+dnf5 config-manager addrepo \
 --from-repofile=https://repo.librewolf.net/librewolf.repo
-dnf install -y $DNF_OPTS librewolf
+dnf5 install -y $DNF_OPTS librewolf
 rm -f /etc/yum.repos.d/librewolf.repo
-dnf config-manager addrepo \
+dnf5 config-manager addrepo \
 --from-repofile=https://packages.freedom.press/yum-tools-prod/dangerzone/dangerzone.repo
-dnf install -y $DNF_OPTS dangerzone
+dnf5 install -y $DNF_OPTS dangerzone
 rm -f /etc/yum.repos.d/dangerzone.repo
-dnf remove -y rpmfusion-free-release rpmfusion-nonfree-release||true
-rm -f /etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion*
-dnf clean all
-rm -rf /var/cache/dnf /var/lib/dnf /var/tmp/*
+dnf5 remove -y rpmfusion-free-release rpmfusion-nonfree-release||true
+rm -f /etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion*||true
+dnf5 clean all||true
+rm -rf /var/cache/dnf/* /var/lib/dnf/* /var/tmp/*||true
