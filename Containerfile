@@ -8,11 +8,6 @@ FROM scratch AS ctx
 COPY build_files/ /
 
 # -----------------------------------------------------------------------------
-# NVIDIA akmods source (modern ublue method)
-# -----------------------------------------------------------------------------
-FROM ghcr.io/ublue-os/akmods-nvidia-open:main-43 AS akmods_nvidia
-
-# -----------------------------------------------------------------------------
 # Base image (Kinoite-Main)
 # -----------------------------------------------------------------------------
 FROM ${BASE_IMAGE} AS final
@@ -30,8 +25,6 @@ LABEL \
 # Prepare directories
 RUN rm -rf /opt && mkdir -p /opt
 
-# Pre-copy akmods (safe even for non-nvidia variants)
-COPY --from=akmods_nvidia / /tmp/akmods-nvidia
 
 # -----------------------------------------------------------------------------
 # BUILD PHASE
@@ -52,14 +45,24 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
         fi; \
     done; \
     \
-    # NVIDIA variant install
+
+# -----------------------------------------------------------------------------
+# NVIDIA AKMODS LAYER
+# -----------------------------------------------------------------------------
+COPY --from=ghcr.io/ublue-os/akmods-nvidia-open:main-43 / /tmp/akmods-nvidia
+
+# -----------------------------------------------------------------------------
+# NVIDIA INSTALL (Conditional)
+# -----------------------------------------------------------------------------
+RUN set -eux; \
     if [ "$VARIANT" = "nvidia" ]; then \
         dnf5 -y install \
-            /tmp/akmods-nvidia/rpms/kmods/kmod-nvidia-*.rpm \
-            /tmp/akmods-nvidia/rpms/ublue-os/ublue-os-nvidia-addons-*.rpm \
+            /tmp/akmods-nvidia/rpms/*/kmod-nvidia*.rpm \
+            /tmp/akmods-nvidia/rpms/*/ublue-os-nvidia-addons*.rpm \
             nvidia-driver \
             nvidia-driver-libs \
             nvidia-settings; \
+        dnf5 clean all; \
     fi
 
 # -----------------------------------------------------------------------------
