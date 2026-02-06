@@ -2,8 +2,6 @@
 set -eu
 flatpak remote-add --if-not-exists \
 flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak config --set languages '*'
-flatpak config --set locales '*'
 for app in \
 org.fkoehler.KTailctl \
 org.deskflow.deskflow \
