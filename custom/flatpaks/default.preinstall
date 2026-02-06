@@ -4,7 +4,13 @@
 [Flatpak Preinstall io.github.kolunmi.Bazaar]
 Branch=stable
 
+[Flatpak Preinstall com.ranfdev.DistroShelf]
+Branch=stable
+
 [Flatpak Preinstall io.github.flattool.Warehouse]
+Branch=stable
+
+[Flatpak Preinstall com.github.tchx84.Flatseal]
 Branch=stable
 
 [Flatpak Preinstall com.belmoussaoui.Authenticator]

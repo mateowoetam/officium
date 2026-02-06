@@ -50,56 +50,41 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 # -----------------------------------------------------------------------------
 RUN set -eux; \
     if [ "$VARIANT" = "nvidia" ]; then \
-        # 1. Install build tools, Kernel headers, and SELinux support
+        # 1. Install RPM Fusion Repositories (Step 1 of your guide)
         dnf5 -y install \
-            gcc-c++ \
-            kernel-devel \
-            kernel-headers \
-            selinux-policy-targeted \
-            selinux-policy-devel \
-            akmods; \
+            https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+            https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm; \
         \
-        # 2. Enable Terra NVIDIA repo
-        dnf5 -y install --enablerepo=terra terra-release-nvidia; \
+        # 2. Install Build Tools & Secure Boot Signing Tools (Step 2 of your guide)
+        dnf5 -y install akmods kmodtool mokutil openssl gcc-c++ kernel-devel kernel-headers; \
         \
-        # 3. Install drivers and toolkit
-        dnf5 -y install \
-            --enablerepo=terra-nvidia \
-            --enablerepo=terra \
-            akmod-nvidia \
-            nvidia-driver \
-            nvidia-driver-cuda \
-            libnvidia-fbc \
-            libva-nvidia-driver \
-            nvidia-modprobe \
-            nvidia-persistenced \
-            nvidia-settings \
-            nvidia-container-toolkit; \
+        # 3. Generate Secure Boot Key (Automated)
+        # This replaces the manual 'kmodgenca' step.
+        kmodgenca --force; \
         \
-        # 4. TRIGGER KERNEL MODULE BUILD (Crucial part from nvidia-post.sh)
-        # Find the specific kernel version installed in the image
-        KERNEL_VERSION="$(find "/usr/lib/modules" -maxdepth 1 -type d ! -path "/usr/lib/modules" -exec basename '{}' ';' | sort | tail -n 1)"; \
-        mkdir -p /var/tmp /var/log/akmods /run/akmods; \
-        chmod 1777 /var/tmp; \
-        # Force akmods to build the nvidia .ko files right now
-        akmods --force --kernels "${KERNEL_VERSION}" --kmod "nvidia"; \
+        # 4. Install the Drivers (Step 3 of your guide)
+        dnf5 -y install akmod-nvidia xorg-x11-drv-nvidia-cuda; \
         \
-        # 5. CONFIGURE BOOT AND DRIVERS (Blacklisting Nouveau)
+        # 5. Force the build immediately
+        # We manually find the kernel version to ensure we build for the image's kernel, not the runner's kernel.
+        KERNEL_VERSION="$(find /usr/lib/modules -maxdepth 1 -type d ! -path /usr/lib/modules -exec basename '{}' ';' | head -n 1)"; \
+        akmods --force --kernels "${KERNEL_VERSION}"; \
+        \
+        # 6. Apply Blacklist & Bootc Kargs (Crucial for bootc images)
+        # This replaces manual 'grubby' commands with persistent configuration files.
         mkdir -p /usr/lib/modprobe.d /usr/lib/bootc/kargs.d; \
-        echo "blacklist nouveau\nblacklist nova-core\noptions nouveau modeset=0" > /usr/lib/modprobe.d/00-nouveau-blacklist.conf; \
         \
-        # Add bootc kernel arguments for the driver
+        # Blacklist the open-source nouveau driver
+        echo -e "blacklist nouveau\noptions nouveau modeset=0" > /usr/lib/modprobe.d/00-nouveau-blacklist.conf; \
+        \
+        # Force nvidia-modeset for better laptop/PRIME compatibility
+        echo "options nvidia-drm modeset=1" > /usr/lib/modprobe.d/nvidia-modeset.conf; \
+        \
+        # Set persistent Bootc Kernel Arguments (replaces grubby --update-kernel)
         echo 'kargs = ["rd.driver.blacklist=nouveau", "modprobe.blacklist=nouveau", "nvidia-drm.modeset=1"]' > /usr/lib/bootc/kargs.d/00-nvidia.toml; \
         \
-        # 6. CDI Generation Service (for containers)
-        printf "[Unit]\nDescription=nvidia container toolkit CDI auto-generation\nAfter=local-fs.target\n\n[Service]\nType=oneshot\nExecStart=/usr/bin/nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml\n\n[Install]\nWantedBy=multi-user.target\n" > /usr/lib/systemd/system/nvctk-cdi.service; \
-        systemctl enable nvctk-cdi.service; \
-        \
-        # 7. Cleanup
-        dnf5 config-manager setopt terra-nvidia.enabled=0; \
         dnf5 clean all; \
     fi
-
 # -----------------------------------------------------------------------------
 # System files
 # -----------------------------------------------------------------------------
