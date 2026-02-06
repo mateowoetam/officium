@@ -59,7 +59,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
         bash "/tmp/nvidia.sh"; \
     fi
 
-
 COPY system_files /
 
 # Set Deseret as default wallpaper
