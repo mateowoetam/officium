@@ -22,5 +22,3 @@ curl -fsSL https://packages.freedom.press/yum-tools-prod/dangerzone/dangerzone.r
 -o /etc/yum.repos.d/dangerzone.repo
 dnf5 -y install $DNF_OPTS dangerzone
 rm -f /etc/yum.repos.d/dangerzone.repo
-dnf5 clean all
-rm -rf /var/cache/dnf /var/lib/dnf /var/tmp/*
