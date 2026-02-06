@@ -50,7 +50,4 @@ fi
 echo "[INFO] Removing temporary repositories..."
 rm -f /etc/yum.repos.d/rpmfusion-*.repo
 rm -f /etc/yum.repos.d/nvidia-container-toolkit.repo
-echo "[INFO] Cleaning package metadata..."
-dnf5 clean all
-rm -rf /var/cache/dnf /var/cache/yum /var/tmp/*
 echo "[INFO] NVIDIA stack installation complete."
