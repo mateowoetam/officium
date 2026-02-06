@@ -20,7 +20,7 @@ LABEL \
     org.opencontainers.image.description="Officium OS (${VARIANT})" \
     org.opencontainers.image.variant="${VARIANT}" \
     org.opencontainers.image.source="https://github.com/mateowoetam/officium" \
-    org.opencontainers.image.licenses="AGPL-3.0 license"
+    org.opencontainers.image.licenses="Apache-2.0"
 
 # Prepare directories
 RUN rm -rf /opt && mkdir -p /opt
@@ -50,37 +50,30 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 # -----------------------------------------------------------------------------
 RUN set -eux; \
     if [ "$VARIANT" = "nvidia" ]; then \
-        # 1. Install RPM Fusion Repositories (Step 1 of your guide)
+        # 1. Install RPM Fusion Repositories (Hardcoded to stable Fedora 43)
+        # Using '43' instead of '$(rpm -E %fedora)' ensures driver compatibility.
         dnf5 -y install \
-            https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-            https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm; \
+            https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-43.noarch.rpm \
+            https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-43.noarch.rpm; \
         \
-        # 2. Install Build Tools & Secure Boot Signing Tools (Step 2 of your guide)
+        # 2. Install Build Tools & Secure Boot Signing Tools
         dnf5 -y install akmods kmodtool mokutil openssl gcc-c++ kernel-devel kernel-headers; \
         \
         # 3. Generate Secure Boot Key (Automated)
-        # This replaces the manual 'kmodgenca' step.
         kmodgenca --force; \
         \
-        # 4. Install the Drivers (Step 3 of your guide)
+        # 4. Install the Drivers (Standard stable versions)
         dnf5 -y install akmod-nvidia xorg-x11-drv-nvidia-cuda; \
         \
         # 5. Force the build immediately
-        # We manually find the kernel version to ensure we build for the image's kernel, not the runner's kernel.
+        # This ensures the driver is baked into the image layer.
         KERNEL_VERSION="$(find /usr/lib/modules -maxdepth 1 -type d ! -path /usr/lib/modules -exec basename '{}' ';' | head -n 1)"; \
         akmods --force --kernels "${KERNEL_VERSION}"; \
         \
-        # 6. Apply Blacklist & Bootc Kargs (Crucial for bootc images)
-        # This replaces manual 'grubby' commands with persistent configuration files.
+        # 6. Apply Blacklist & Bootc Kargs
         mkdir -p /usr/lib/modprobe.d /usr/lib/bootc/kargs.d; \
-        \
-        # Blacklist the open-source nouveau driver
         echo -e "blacklist nouveau\noptions nouveau modeset=0" > /usr/lib/modprobe.d/00-nouveau-blacklist.conf; \
-        \
-        # Force nvidia-modeset for better laptop/PRIME compatibility
         echo "options nvidia-drm modeset=1" > /usr/lib/modprobe.d/nvidia-modeset.conf; \
-        \
-        # Set persistent Bootc Kernel Arguments (replaces grubby --update-kernel)
         echo 'kargs = ["rd.driver.blacklist=nouveau", "modprobe.blacklist=nouveau", "nvidia-drm.modeset=1"]' > /usr/lib/bootc/kargs.d/00-nvidia.toml; \
         \
         dnf5 clean all; \
