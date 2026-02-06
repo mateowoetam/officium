@@ -13,5 +13,4 @@ echo "Installing profile scripts into /etc/profile.d..."
 curl -fsSL "$BASE_URL/lang.sh" -o /etc/profile.d/lang.sh
 curl -fsSL "$BASE_URL/PackageKit.sh" -o /etc/profile.d/PackageKit.sh
 chmod 644 /etc/profile.d/lang.sh /etc/profile.d/PackageKit.sh
-rm -rf /root/.cache /root/.cache/curl /var/tmp/*
 echo "System configuration complete."

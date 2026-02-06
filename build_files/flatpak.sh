@@ -26,4 +26,3 @@ app.comaps.comaps \
 org.kde.elisa \
 org.videolan.VLC
 flatpak uninstall --unused -y||true
-rm -rf /var/tmp/* /tmp/*
