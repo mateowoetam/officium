@@ -50,45 +50,32 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 # -----------------------------------------------------------------------------
 RUN set -eux; \
     if [ "$VARIANT" = "nvidia" ]; then \
-        dnf5 -y install gcc-c++; \
+        # 1. Install necessary build tools and kernel headers
+        dnf5 -y install gcc-c++ kernel-devel kernel-headers; \
         \
-        # enable terra nvidia support
+        # 2. Enable the Terra NVIDIA release repo
         dnf5 -y install --enablerepo=terra terra-release-nvidia; \
-        dnf5 config-manager setopt terra-nvidia.enabled=0; \
         \
-        # install akmods + drivers
-        dnf5 -y install --enablerepo=terra-nvidia akmod-nvidia; \
-        \
+        # 3. Install drivers and tools in one go to ensure dependencies resolve
         dnf5 -y install \
             --enablerepo=terra-nvidia \
             --enablerepo=terra \
+            akmod-nvidia \
             nvidia-driver \
             nvidia-driver-cuda \
             libnvidia-fbc \
             libva-nvidia-driver \
             nvidia-modprobe \
             nvidia-persistenced \
-            nvidia-settings; \
-        \
-        # container toolkit
-        sed -i '/^enabled=/a priority=90' \
-            /etc/yum.repos.d/terra-nvidia.repo; \
-        \
-        dnf5 -y install \
-            --enablerepo=terra-nvidia \
+            nvidia-settings \
             nvidia-container-toolkit; \
         \
-        # selinux module
-        curl --retry 3 -L \
-            https://raw.githubusercontent.com/NVIDIA/dgx-selinux/master/bin/RHEL9/nvidia-container.pp \
-            -o /tmp/nvidia-container.pp; \
-        semodule -i /tmp/nvidia-container.pp; \
-        rm -f /tmp/nvidia-container.pp; \
-        \
-        # disable repo after install
+        # 4. Cleanup and disable repo to keep the final image clean
         dnf5 config-manager setopt terra-nvidia.enabled=0; \
-        \
         dnf5 clean all; \
+        \
+        # Note: We intentionally skip the RHEL9 semodule command
+        # as it is incompatible with Fedora 43.
     fi
 
 # -----------------------------------------------------------------------------
