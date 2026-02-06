@@ -50,22 +50,19 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 # -----------------------------------------------------------------------------
 RUN set -eux; \
     if [ "$VARIANT" = "nvidia" ]; then \
-        # 1. Install build tools AND SELinux policy support first
+        # 1. Install build tools, Kernel headers, and SELinux support
         dnf5 -y install \
             gcc-c++ \
             kernel-devel \
             kernel-headers \
             selinux-policy-targeted \
-            selinux-policy-devel; \
+            selinux-policy-devel \
+            akmods; \
         \
-        # 2. Allow containers to manage cgroups (required for some toolkit versions)
-        # We use || true because this can fail in some build environments but shouldn't stop the build
-        setsebool -P container_manage_cgroup on || true; \
-        \
-        # 3. Enable the Terra NVIDIA release repo
+        # 2. Enable Terra NVIDIA repo
         dnf5 -y install --enablerepo=terra terra-release-nvidia; \
         \
-        # 4. Install drivers and tools
+        # 3. Install drivers and toolkit
         dnf5 -y install \
             --enablerepo=terra-nvidia \
             --enablerepo=terra \
@@ -79,7 +76,26 @@ RUN set -eux; \
             nvidia-settings \
             nvidia-container-toolkit; \
         \
-        # 5. Cleanup
+        # 4. TRIGGER KERNEL MODULE BUILD (Crucial part from nvidia-post.sh)
+        # Find the specific kernel version installed in the image
+        KERNEL_VERSION="$(find "/usr/lib/modules" -maxdepth 1 -type d ! -path "/usr/lib/modules" -exec basename '{}' ';' | sort | tail -n 1)"; \
+        mkdir -p /var/tmp /var/log/akmods /run/akmods; \
+        chmod 1777 /var/tmp; \
+        # Force akmods to build the nvidia .ko files right now
+        akmods --force --kernels "${KERNEL_VERSION}" --kmod "nvidia"; \
+        \
+        # 5. CONFIGURE BOOT AND DRIVERS (Blacklisting Nouveau)
+        mkdir -p /usr/lib/modprobe.d /usr/lib/bootc/kargs.d; \
+        echo "blacklist nouveau\nblacklist nova-core\noptions nouveau modeset=0" > /usr/lib/modprobe.d/00-nouveau-blacklist.conf; \
+        \
+        # Add bootc kernel arguments for the driver
+        echo 'kargs = ["rd.driver.blacklist=nouveau", "modprobe.blacklist=nouveau", "nvidia-drm.modeset=1"]' > /usr/lib/bootc/kargs.d/00-nvidia.toml; \
+        \
+        # 6. CDI Generation Service (for containers)
+        printf "[Unit]\nDescription=nvidia container toolkit CDI auto-generation\nAfter=local-fs.target\n\n[Service]\nType=oneshot\nExecStart=/usr/bin/nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml\n\n[Install]\nWantedBy=multi-user.target\n" > /usr/lib/systemd/system/nvctk-cdi.service; \
+        systemctl enable nvctk-cdi.service; \
+        \
+        # 7. Cleanup
         dnf5 config-manager setopt terra-nvidia.enabled=0; \
         dnf5 clean all; \
     fi
