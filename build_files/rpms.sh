@@ -13,7 +13,7 @@ dnf5 -y install $DNF_OPTS \
 libavcodec-freeworld \
 VK_hdr_layer \
 opendoas dash fish fastfetch gamescope \
-wine alacritty thunderbird libjxl
+wine alacritty thunderbird libjxl gnupg
 curl -fsSL https://repo.librewolf.net/librewolf.repo \
 -o /etc/yum.repos.d/librewolf.repo
 dnf5 -y install $DNF_OPTS librewolf

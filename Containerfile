@@ -43,25 +43,51 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
             install -m755 "/ctx/$script" "/tmp/$script"; \
             bash "/tmp/$script"; \
         fi; \
-    done; \
-    \
-
-# -----------------------------------------------------------------------------
-# NVIDIA AKMODS LAYER
-# -----------------------------------------------------------------------------
-COPY --from=ghcr.io/ublue-os/akmods-nvidia-open:main-43 / /tmp/akmods-nvidia
+    done
 
 # -----------------------------------------------------------------------------
 # NVIDIA INSTALL (Conditional)
 # -----------------------------------------------------------------------------
 RUN set -eux; \
     if [ "$VARIANT" = "nvidia" ]; then \
+        dnf5 -y install gcc-c++; \
+        \
+        # enable terra nvidia support
+        dnf5 -y install --enablerepo=terra terra-release-nvidia; \
+        dnf5 config-manager setopt terra-nvidia.enabled=0; \
+        \
+        # install akmods + drivers
+        dnf5 -y install --enablerepo=terra-nvidia akmod-nvidia; \
+        \
         dnf5 -y install \
-            /tmp/akmods-nvidia/rpms/*/kmod-nvidia*.rpm \
-            /tmp/akmods-nvidia/rpms/*/ublue-os-nvidia-addons*.rpm \
+            --enablerepo=terra-nvidia \
+            --enablerepo=terra \
             nvidia-driver \
-            nvidia-driver-libs \
+            nvidia-driver-cuda \
+            libnvidia-fbc \
+            libva-nvidia-driver \
+            nvidia-modprobe \
+            nvidia-persistenced \
             nvidia-settings; \
+        \
+        # container toolkit
+        sed -i '/^enabled=/a priority=90' \
+            /etc/yum.repos.d/terra-nvidia.repo; \
+        \
+        dnf5 -y install \
+            --enablerepo=terra-nvidia \
+            nvidia-container-toolkit; \
+        \
+        # selinux module
+        curl --retry 3 -L \
+            https://raw.githubusercontent.com/NVIDIA/dgx-selinux/master/bin/RHEL9/nvidia-container.pp \
+            -o /tmp/nvidia-container.pp; \
+        semodule -i /tmp/nvidia-container.pp; \
+        rm -f /tmp/nvidia-container.pp; \
+        \
+        # disable repo after install
+        dnf5 config-manager setopt terra-nvidia.enabled=0; \
+        \
         dnf5 clean all; \
     fi
 

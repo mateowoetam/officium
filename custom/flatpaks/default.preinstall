@@ -1,0 +1,26 @@
+# Default Flatpak applications
+# Installed automatically via flatpak preinstall on first boot
+
+[Flatpak Preinstall io.github.kolunmi.Bazaar]
+Branch=stable
+
+[Flatpak Preinstall io.github.flattool.Warehouse]
+Branch=stable
+
+[Flatpak Preinstall com.belmoussaoui.Authenticator]
+Branch=stable
+
+[Flatpak Preinstall org.libreoffice.LibreOffice]
+Branch=stable
+
+[Flatpak Preinstall com.nextcloud.desktopclient.nextcloud]
+Branch=stable
+
+[Flatpak Preinstall org.localsend.localsend_app]
+Branch=stable
+
+[Flatpak Preinstall org.kde.elisa]
+Branch=stable
+
+[Flatpak Preinstall org.videolan.VLC]
+Branch=stable
