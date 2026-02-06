@@ -50,13 +50,22 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 # -----------------------------------------------------------------------------
 RUN set -eux; \
     if [ "$VARIANT" = "nvidia" ]; then \
-        # 1. Install necessary build tools and kernel headers
-        dnf5 -y install gcc-c++ kernel-devel kernel-headers; \
+        # 1. Install build tools AND SELinux policy support first
+        dnf5 -y install \
+            gcc-c++ \
+            kernel-devel \
+            kernel-headers \
+            selinux-policy-targeted \
+            selinux-policy-devel; \
         \
-        # 2. Enable the Terra NVIDIA release repo
+        # 2. Allow containers to manage cgroups (required for some toolkit versions)
+        # We use || true because this can fail in some build environments but shouldn't stop the build
+        setsebool -P container_manage_cgroup on || true; \
+        \
+        # 3. Enable the Terra NVIDIA release repo
         dnf5 -y install --enablerepo=terra terra-release-nvidia; \
         \
-        # 3. Install drivers and tools in one go to ensure dependencies resolve
+        # 4. Install drivers and tools
         dnf5 -y install \
             --enablerepo=terra-nvidia \
             --enablerepo=terra \
@@ -70,12 +79,9 @@ RUN set -eux; \
             nvidia-settings \
             nvidia-container-toolkit; \
         \
-        # 4. Cleanup and disable repo to keep the final image clean
+        # 5. Cleanup
         dnf5 config-manager setopt terra-nvidia.enabled=0; \
         dnf5 clean all; \
-        \
-        # Note: We intentionally skip the RHEL9 semodule command
-        # as it is incompatible with Fedora 43.
     fi
 
 # -----------------------------------------------------------------------------
