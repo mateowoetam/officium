@@ -14,13 +14,9 @@ flatpak --system uninstall -y "$app"||true
 done
 flatpak install -y --noninteractive flathub \
 io.github.kolunmi.Bazaar \
-com.ranfdev.DistroShelf \
 io.github.flattool.Warehouse \
-com.github.tchx84.Flatseal \
 com.belmoussaoui.Authenticator \
 org.libreoffice.LibreOffice \
-com.nextcloud.desktopclient.nextcloud \
-org.localsend.localsend_app \
 org.kde.elisa \
 org.videolan.VLC
 mkdir -p /etc/flatpak/preinstall.d
