@@ -1,15 +1,22 @@
 # Use an ARG for the base image, provided by the CI/CD pipeline
 ARG BASE_IMAGE
+
+# -----------------------------------------------------------------------------
 # Build context
+# -----------------------------------------------------------------------------
 FROM scratch AS ctx
 COPY build_files/ /
 
 # -----------------------------------------------------------------------------
-# Base image (Kinoite-Main or Kinoite-Nvidia)
+# NVIDIA akmods source (modern ublue method)
+# -----------------------------------------------------------------------------
+FROM ghcr.io/ublue-os/akmods-nvidia-open:main-43 AS akmods_nvidia
+
+# -----------------------------------------------------------------------------
+# Base image (Kinoite-Main)
 # -----------------------------------------------------------------------------
 FROM ${BASE_IMAGE} AS final
 
-# Re-declare ARGs to use them inside this stage
 ARG VARIANT
 ARG IMAGE_NAME
 
@@ -20,10 +27,15 @@ LABEL \
     org.opencontainers.image.source="https://github.com/mateowoetam/officium" \
     org.opencontainers.image.licenses="AGPL-3.0 license"
 
-# Clean up opt and prepare directories
+# Prepare directories
 RUN rm -rf /opt && mkdir -p /opt
 
+# Pre-copy akmods (safe even for non-nvidia variants)
+COPY --from=akmods_nvidia / /tmp/akmods-nvidia
+
+# -----------------------------------------------------------------------------
 # BUILD PHASE
+# -----------------------------------------------------------------------------
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,target=/var/cache \
     --mount=type=cache,target=/var/cache/dnf \
@@ -32,7 +44,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,target=/tmp \
     set -eux; \
     \
-    # Run common build scripts
+    # Run common scripts
     for script in rpms.sh flatpak.sh system-config.sh services.sh custom.sh; do \
         if [ -f "/ctx/$script" ]; then \
             install -m755 "/ctx/$script" "/tmp/$script"; \
@@ -40,33 +52,26 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
         fi; \
     done; \
     \
-    # NVIDIA variant stage
+    # NVIDIA variant install
     if [ "$VARIANT" = "nvidia" ]; then \
-        dnf5 config-manager unsetopt skip_if_unavailable; \
-        dnf5 -y remove \
-            nvidia-gpu-firmware \
-            rocm-hip \
-            rocm-opencl \
-            rocm-clinfo \
-            rocm-smi; \
-        \
-        dnf5 -y copr enable ublue-os/staging; \
         dnf5 -y install \
-            egl-wayland.x86_64 \
-            egl-wayland.i686; \
-        \
-        install -m755 "/ctx/nvidia.sh" "/tmp/nvidia.sh"; \
-        bash "/tmp/nvidia.sh"; \
+            /tmp/akmods-nvidia/rpms/kmods/kmod-nvidia-*.rpm \
+            /tmp/akmods-nvidia/rpms/ublue-os/ublue-os-nvidia-addons-*.rpm \
+            nvidia-driver \
+            nvidia-driver-libs \
+            nvidia-settings; \
     fi
 
+# -----------------------------------------------------------------------------
+# System files
+# -----------------------------------------------------------------------------
 COPY system_files /
 
-# Set Deseret as default wallpaper
+# Wallpaper
 RUN set -eux; \
     mkdir -p /usr/share/backgrounds; \
     ln -sf /usr/share/wallpapers/Deseret/contents/images/4240x2832.jxl /usr/share/backgrounds/default.jxl; \
     ln -sf /usr/share/wallpapers/Deseret/contents/images/4240x2832.jxl /usr/share/backgrounds/default-dark.jxl
 
-
-# Final health check for bootc compatibility
+# Bootc validation
 RUN bootc container lint
