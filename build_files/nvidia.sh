@@ -6,11 +6,12 @@ DNF_OPTS="--setopt=tsflags=nodocs --setopt=install_weak_deps=False"
 dnf5 -y install --refresh $DNF_OPTS --allowerasing \
 "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$FEDORA_VERSION.noarch.rpm" \
 "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$FEDORA_VERSION.noarch.rpm"
-dnf5 -y install --refresh $DNF_OPTS --allowerasing \
+dnf5 -y install --refresh $DNF_OPTS --allowerasing --best \
 kernel-core \
 kernel-devel-matched \
 kernel-headers \
 akmod-nvidia \
+nvidia-kmon-common \
 xorg-x11-drv-nvidia \
 xorg-x11-drv-nvidia-cuda
 akmods --kernels "$(rpm -q kernel --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n')"
