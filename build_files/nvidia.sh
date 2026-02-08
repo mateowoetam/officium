@@ -11,10 +11,9 @@ kernel-core \
 kernel-devel-matched \
 kernel-headers \
 akmod-nvidia \
-nvidia-kmod-common \
 xorg-x11-drv-nvidia \
 xorg-x11-drv-nvidia-cuda
-akmods --kernels "$(rpm -q kernel --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n')"
+akmods --force --kernels "$(rpm -q kernel-core --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n')"
 dnf5 remove -y rpmfusion-free-release rpmfusion-nonfree-release
 dnf5 clean all
 fi
