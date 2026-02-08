@@ -56,13 +56,11 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,target=/tmp \
     set -eux; \
     \
-    # Run Nvidia scripts
-    for script in nvidia.sh; do \
-        if [ -f "/ctx/$script" ]; then \
-            install -m755 "/ctx/$script" "/tmp/$script"; \
-            bash "/tmp/$script"; \
-        fi; \
-    done
+    # Run Nvidia scripts (No loop, just a direct check)
+    if [ -f "/ctx/nvidia.sh" ]; then \
+        install -m755 "/ctx/nvidia.sh" "/tmp/nvidia.sh"; \
+        bash "/tmp/nvidia.sh"; \
+    fi
 # -----------------------------------------------------------------------------
 # System files
 # -----------------------------------------------------------------------------

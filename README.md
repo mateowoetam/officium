@@ -44,6 +44,7 @@ sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/mateowo
 ```
 
 For the Nvidia enable image run this:
+
 ```
 sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/mateowoetam/officium-nvidia:latest
 ```

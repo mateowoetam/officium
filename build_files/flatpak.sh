@@ -15,12 +15,10 @@ done
 flatpak install -y --noninteractive flathub \
 io.github.kolunmi.Bazaar \
 io.github.flattool.Warehouse \
-com.belmoussaoui.Authenticator \
 org.libreoffice.LibreOffice \
-org.kde.elisa \
-org.videolan.VLC
 mkdir -p /etc/flatpak/preinstall.d
 if compgen -G "/ctx/custom/flatpaks/*.preinstall" >/dev/null;then
 cp /ctx/custom/flatpaks/*.preinstall /etc/flatpak/preinstall.d/
 fi
-flatpak --system uninstall --unused -y||true
+flatpak uninstall --unused --delete-data -y --noninteractive
+flatpak repair
