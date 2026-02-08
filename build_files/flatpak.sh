@@ -15,7 +15,7 @@ done
 flatpak install -y --noninteractive flathub \
 io.github.kolunmi.Bazaar \
 io.github.flattool.Warehouse \
-org.libreoffice.LibreOffice \
+org.libreoffice.LibreOffice
 mkdir -p /etc/flatpak/preinstall.d
 if compgen -G "/ctx/custom/flatpaks/*.preinstall" >/dev/null;then
 cp /ctx/custom/flatpaks/*.preinstall /etc/flatpak/preinstall.d/
