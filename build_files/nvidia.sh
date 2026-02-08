@@ -3,10 +3,10 @@ set -eux
 if [ "$VARIANT" = "nvidia" ];then
 FEDORA_VERSION="$(rpm -E %fedora)"
 DNF_OPTS="--setopt=tsflags=nodocs --setopt=install_weak_deps=False"
-dnf5 -y --refresh $DNF_OPTS --allowerasing install \
+dnf5 -y install --refresh $DNF_OPTS --allowerasing \
 "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$FEDORA_VERSION.noarch.rpm" \
 "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$FEDORA_VERSION.noarch.rpm"
-dnf5 -y --refresh $DNF_OPTS --allowerasing install \
+dnf5 -y install --refresh $DNF_OPTS --allowerasing \
 kernel-core \
 kernel-devel-matched \
 kernel-headers \
