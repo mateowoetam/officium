@@ -12,7 +12,8 @@ dnf5 -y install \
 dnf5 -y install $DNF_OPTS libavcodec-freeworld \
 VK_hdr_layer \
 opendoas dash fish fastfetch gamescope \
-wine alacritty thunderbird libjxl gnupg kscreen
+wine alacritty thunderbird libjxl kscreen \
+gnupg pcsc-tools opensc pcsc-lite pam_yubico pam-u2f pamu2fcfg yubikey-manager fido2-tools libfido2 pinentry-qt
 curl -fsSL https://repo.librewolf.net/librewolf.repo \
 -o /etc/yum.repos.d/librewolf.repo
 dnf5 -y install $DNF_OPTS librewolf
