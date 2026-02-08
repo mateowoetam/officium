@@ -11,7 +11,7 @@ kernel-core \
 kernel-devel-matched \
 kernel-headers \
 akmod-nvidia \
-nvidia-kmon-common \
+nvidia-kmod-common \
 xorg-x11-drv-nvidia \
 xorg-x11-drv-nvidia-cuda
 akmods --kernels "$(rpm -q kernel --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n')"
