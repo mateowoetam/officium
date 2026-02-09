@@ -12,7 +12,6 @@ on:
       platform:
         required: true
         type: choice
-        default: "amd64"
         options:
           - amd64
           - arm64
@@ -20,12 +19,13 @@ on:
     branches:
       - main
     paths:
-      - 'disk_config/**'
-      - '.github/workflows/build-disk.yml'
+      - './disk_config/disk.toml'
+      - './disk_config/iso.toml'
+      - './.github/workflows/build-disk.yml'
 
 env:
-  IMAGE_NAME: ${{ github.event.repository.name }}
-  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+  IMAGE_NAME: ${{ github.event.repository.name }} # output of build.yml, keep in sync
+  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"  # do not edit
   DEFAULT_TAG: "latest"
   BIB_IMAGE: "quay.io/centos-bootc/bootc-image-builder:latest"
 
@@ -36,13 +36,12 @@ concurrency:
 jobs:
   build:
     name: Build disk images
-    runs-on: ${{ inputs.platform == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    runs-on: ${{ inputs.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     strategy:
       fail-fast: false
       matrix:
+        variant: ["base", "nvidia"]
         disk-type: ["qcow2", "anaconda-iso"]
-        image-variant: ["base", "nvidia"]
-
     permissions:
       contents: read
       packages: read
@@ -51,37 +50,21 @@ jobs:
     steps:
       - name: Prepare environment
         run: |
-          # 1. Resolve Image Name logic
-          # If variant is base, use the repo name (officium).
-          # Otherwise, append the variant (officium-nvidia).
-          if [ "${{ matrix.image-variant }}" = "base" ]; then
-            RESOLVED_NAME="${{ env.IMAGE_NAME }}"
-          else
-            RESOLVED_NAME="${{ env.IMAGE_NAME }}-${{ matrix.image-variant }}"
-          fi
-
-          # 2. Resolve Disk Type and format it (replacing spaces with hyphens)
+          USER_UID=$(id -u)
+          USER_GID=$(id -g)
+          # Concatenate the types with a hyphen
           DISK_TYPE=$(echo "${{ matrix.disk-type }}" | tr ' ' '-')
-
-          # 3. Resolve Architecture (Manual input or Auto-detect)
-          ARCH="${{ inputs.platform }}"
-          if [ -z "$ARCH" ]; then
-            ARCH=$(uname -m)
-            [ "$ARCH" = "aarch64" ] && ARCH="arm64"
-            [ "$ARCH" = "x86_64" ] && ARCH="amd64"
+          if [ "${{ matrix.variant }}" = "base" ]; then
+            NAME="${{ github.event.repository.name }}"
+          else
+            NAME="${{ github.event.repository.name }}-${{ matrix.variant }}"
           fi
 
-          # 4. Export to GITHUB_ENV
-          {
-            echo "IMAGE_REGISTRY=${IMAGE_REGISTRY,,}"
-            echo "IMAGE_NAME=${IMAGE_NAME,,}"
-            echo "RESOLVED_IMAGE_NAME=${RESOLVED_NAME,,}"
-            echo "DISK_TYPE=${DISK_TYPE}"
-            echo "ARCH=${ARCH}"
-            echo "USER_UID=$(id -u)"
-            echo "USER_GID=$(id -g)"
-            echo "REGISTRY_AUTH_FILE=${{ github.workspace }}/auth.json"
-           } >> "$GITHUB_ENV"
+          echo "IMAGE_REGISTRY=${IMAGE_REGISTRY,,}" >> ${GITHUB_ENV}
+          echo "IMAGE_NAME=${NAME,,}" >> ${GITHUB_ENV}  # Fix: uses the NAME variable
+          echo "DISK_TYPE=${DISK_TYPE}" >> ${GITHUB_ENV}
+          echo "USER_UID=${USER_UID}" >> ${GITHUB_ENV}
+          echo "USER_GID=${USER_GID}" >> ${GITHUB_ENV}
 
       - name: Install dependencies
         if: inputs.platform == 'arm64'
@@ -100,32 +83,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Log into GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          logout: false
-
       - name: Build disk images
         id: build
         uses: osbuild/bootc-image-builder-action@main
         with:
           builder-image: ${{ env.BIB_IMAGE }}
-          config-file: ${{ matrix.disk-type == 'anaconda-iso' && './disk_config/iso.toml' || './disk_config/disk.toml' }}
-          image: ${{ env.IMAGE_REGISTRY }}/${{ env.RESOLVED_IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
+          config-file: >-
+            ${{ matrix.disk-type == 'anaconda-iso'
+                ? (matrix.variant == 'nvidia' ? './disk_config/iso-nvidia.toml' : './disk_config/iso.toml')
+                : './disk_config/disk.toml'
+            }}
+          image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
+          image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
           chown: ${{ env.USER_UID }}:${{ env.USER_GID }}
           types: ${{ matrix.disk-type }}
-          additional-args: |
-            --use-librepo=True
-            --authfile ${{ env.REGISTRY_AUTH_FILE }}
+          additional-args: --use-librepo=True
 
       - name: Upload disk images and Checksum to Job Artifacts
         if: inputs.upload-to-s3 != true && github.event_name != 'pull_request'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: ${{ matrix.image-variant }}-${{ matrix.disk-type }}-${{ inputs.platform || 'amd64' }}
           path: ${{ steps.build.outputs.output-directory }}
           if-no-files-found: error
           retention-days: 0
@@ -146,4 +123,4 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rclone
-          rclone copy "$SOURCE_DIR" S3:${{ secrets.S3_BUCKET_NAME }}/${{ matrix.image-variant }}/${{ github.run_id }}
+          rclone copy $SOURCE_DIR S3:${{ secrets.S3_BUCKET_NAME }}
