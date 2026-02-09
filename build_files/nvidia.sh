@@ -13,26 +13,21 @@ if ! dnf5 -y install --refresh $DNF_OPTS --allowerasing \
 log_error "Failed to install RPM Fusion repositories."
 exit 1
 fi
-if ! dnf5 upgrade --refresh -y;then
-log_error "Failed to upgrade existing packages."
+dnf5 -y install $DNF_OPTS kernel-devel gcc akmods
+if ! dnf5 -y install --refresh $DNF_OPTS --best --allowerasing akmod-nvidia;then
+log_error "Failed to install NVIDIA drivers."
 exit 1
 fi
-if ! dnf5 -y install --refresh $DNF_OPTS --best --allowerasing akmod-nvidia xorg-x11-drv-nouveau;then
-log_error "Failed to install NVIDIA and Nouveau drivers."
+if ! echo "blacklist nouveau" >/etc/modprobe.d/blacklist-nouveau.conf;then
+log_error "Failed to create blacklist for Nouveau."
 exit 1
 fi
-if ! echo "blacklist nvidia" >/etc/modprobe.d/blacklist-nvidia.conf;then
-log_error "Failed to create blacklist for NVIDIA."
+KERNEL_VERSION=$(rpm -q kernel-devel --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n'|head -n 1)
+if ! akmods --force --kernels "$KERNEL_VERSION";then
+log_error "Failed to compile kernel modules. Check /var/cache/akmods/ for logs."
 exit 1
 fi
-if ! dracut --force;then
-log_error "Failed to create initramfs."
-exit 1
-fi
-if ! akmods --force --kernels "$(rpm -q kernel-core --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n')";then
-log_error "Failed to compile kernel modules."
-exit 1
-fi
+dracut --force
 dnf5 remove -y rpmfusion-free-release rpmfusion-nonfree-release||true
 dnf5 clean all||true
 fi
