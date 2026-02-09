@@ -13,9 +13,10 @@ if ! dnf5 -y install --refresh $DNF_OPTS xorg-x11-drv-nouveau;then
 log_error "Failed to install Nouveau driver."
 exit 1
 fi
-rm -f /etc/modprobe.d/blacklist-nouveau.conf /etc/modprobe.d/blacklist-nvidia.conf
-if ! dracut --force;then
-log_error "Failed to update initramfs."
+rm -f /etc/modprobe.d/blacklist-nouveau.conf /etc/modprobe.d/blacklist-nvidia.conf||true
+KVER=$(rpm -q kernel-core --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n'|head -n 1)
+if ! dracut --force --kver "$KVER";then
+log_error "Failed to update initramfs for $KVER."
 exit 1
 fi
 dnf5 clean all||true
