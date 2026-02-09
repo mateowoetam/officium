@@ -1,0 +1,5 @@
+yaml-blocklist-paths:
+    - /run/host/etc/bazzar/blocklist.yaml
+
+curated-config-paths:
+    - /run/host/etc/bazzar/curated.yaml

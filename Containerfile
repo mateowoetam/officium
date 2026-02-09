@@ -38,7 +38,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     set -eux; \
     \
     # Run common scripts
-    for script in rpms.sh flatpak.sh system-config.sh services.sh custom.sh; do \
+    for script in rpms.sh flatpak.sh system-config.sh services.sh custom.sh signing.sh;; do \
         if [ -f "/ctx/$script" ]; then \
             install -m755 "/ctx/$script" "/tmp/$script"; \
             bash "/tmp/$script"; \

@@ -1,3 +1,14 @@
-[[customizations.filesystem]]
+[[customizations.storage.filesystem]]
 mountpoint = "/"
+format = "btrfs"
 minsize = "20 GiB"
+
+[[customizations.storage.filesystem]]
+mountpoint = "/boot"
+format = "ext4"
+minsize = "2 GiB"
+
+[[customizations.user]]
+name = "officium"
+password = "officium"
+groups = ["wheel"]

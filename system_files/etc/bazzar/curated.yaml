@@ -1,0 +1,337 @@
+# https://github.com/kolunmi/bazaar/blob/main/docs/overview.org
+
+css: |
+  .global-section banner {
+     margin-top: 30px;
+     margin-left: 30px;
+     margin-right: 30px;
+     border-radius: 12px;
+  }
+
+  .global-section banner-text-overlay {
+     margin: 30px;
+     padding: 20px;
+  }
+
+  .global-section banner-text {
+     padding: 50px;
+     text-shadow: 1px 1px 4px rgba(0, 0, 5, 1);
+  }
+
+  .global-section title {
+    text-shadow: 1px 1px 4px rgba(0, 0, 5, 1);
+  }
+
+  .global-section subtitle {
+    font-weight: 400;
+    text-shadow: 4px 4px 8px rgba(0, 0, 5, 1);
+  }
+
+  .global-section app-tile > button {
+    background-color: alpha(white, 0.1);
+  }
+
+  .global-section {
+    margin: 15px;
+    border-radius: 12px;
+    color: #ffffff;
+  }
+
+  .global-section app-tile-verified-check {
+    color: var(--fg-color);
+  }
+
+  .global-section app-tile-installed-indicator {
+    color: var(--fg-color);
+  }
+
+  .global-section app-tile-installed-pill {
+    background-color: @success_bg_color;
+    color: var(--fg-color);
+  }
+
+  .rec-section {
+    background: linear-gradient(0deg, #7c4d39, #c3855d);
+  }
+
+  .rec-section-dark {
+    background: linear-gradient(0deg, #4e352e, #3f3634);
+  }
+
+  .cc-section {
+    background: linear-gradient(0deg, #b8a0cf, #9b59b6);
+  }
+
+  .cc-section-dark {
+    background: linear-gradient(0deg, #392946, #050815);
+  }
+
+  .music-section {
+    background: linear-gradient(to bottom, #F56217, #ffab7b);
+  }
+
+  .music-section-dark {
+    background: linear-gradient(to bottom, #F56217, #912906);
+  }
+
+  .office-section {
+    background: linear-gradient(to bottom, #875839, #67462f);
+  }
+
+  .office-section-dark {
+    background: linear-gradient(to bottom, #67462f, #533520);
+  }
+
+  .gaming-section {
+    background: linear-gradient(0deg, #888a90, #67c29a);
+  }
+
+  .gaming-section-dark {
+    background: linear-gradient(0deg, #003a00, #444445);
+  }
+
+  .utilities-section {
+    background: linear-gradient(0deg, #7e796c, #694f3f);
+  }
+
+  .utilities-section-dark {
+    background: linear-gradient(0deg, #694f3f, #261908);
+  }
+
+  .dev-section {
+    background: linear-gradient(0deg, #80a92b, #28603d);
+  }
+
+  .dev-section-dark {
+    background: linear-gradient(0deg, #28603d, #162a1f);
+  }
+
+rows:
+  - sections:
+      - expand-horizontally: true
+        classes:
+          - global-section
+        light-classes:
+          - rec-section
+        dark-classes:
+          - rec-section-dark
+        category:
+          title: "officium Recommends"
+          subtitle: "Our Favorite Applications"
+          banner: file:///run/host/etc/bazaar/01-officium-bazaar.jxl
+          banner-fit: cover
+          banner-text-halign: start
+          banner-text-valign: center
+          banner-height: 550
+          appids:
+            - app.comaps.comaps
+            - io.github.DenysMb.Kontainer
+            - org.kde.kstars
+            - re.sonny.Eloquent
+            - org.kde.audiotube
+            - io.github.getnf.embellish
+            - io.github.pleromix.IceBox
+            - io.github.nozwock.Packet
+            - com.github.ADBeveridge.Raider
+            - org.gimp.GIMP
+
+  - sections:
+      - expand-horizontally: true
+        classes:
+          - global-section
+        light-classes:
+          - cc-section
+        dark-classes:
+          - cc-section-dark
+        category:
+          title: "Content Creation"
+          subtitle: "Create your first donut or make some tunes"
+          banner: file:///run/host/etc/bazaar/02-officium-bazaar.jxl
+          banner-fit: cover
+          banner-text-halign: end
+          banner-text-valign: center
+          banner-height: 550
+          appids:
+            - org.kde.krita
+            - org.ardour.Ardour
+            - org.kde.kdenlive
+            - org.blender.Blender
+            - org.inkscape.Inkscape
+            - org.audacityteam.Audacity
+            - com.obsproject.Studio
+            - com.inochi2d.inochi-session
+            - org.gimp.GIMP
+            - org.darktable.Darktable
+            - com.feaneron.Boatswain
+
+  - sections:
+      - expand-horizontally: true
+        classes:
+          - global-section
+        light-classes:
+          - music-section
+        dark-classes:
+          - music-section-dark
+        category:
+          title: "Music & Media"
+          subtitle: "Let me break it down for you"
+          banner: file:///run/host/etc/bazaar/03-officium-bazaar.jxl
+          banner-fit: cover
+          banner-text-halign: start
+          banner-text-valign: center
+          banner-height: 550
+          appids:
+            - org.kde.elisa
+            - org.videolan.VLC
+            - de.haeckerfelix.Shortwave
+            - tv.plex.PlexDesktop
+            - org.kde.kasts
+            - org.kde.arianna
+            - com.plexamp.Plexamp
+            - io.github.mhogomchungu.media-downloader
+            - com.github.wwmm.easyeffects
+            - me.timschneeberger.jdsp4linux
+            - org.jellyfin.JellyfinDesktop
+
+  - sections:
+    - expand-horizontally: true
+      classes:
+        - global-section
+      light-classes:
+        - office-section
+      dark-classes:
+      - office-section-dark
+      category:
+        title: "Office & Productivity"
+        subtitle: "Let's do some work"
+        banner: file:///run/host/etc/bazaar/04-officium-bazaar.jxl
+        banner-fit: cover
+        banner-text-halign: end
+        banner-text-valign: center
+        banner-height: 550
+        appids:
+          - org.libreoffice.LibreOffice
+          - com.collaboraoffice.Office
+          - page.codeberg.censor.Censor
+          - com.slack.Slack
+          - md.obsidian.Obsidian
+          - org.onlyoffice.desktopeditors
+          - io.github.alainm23.planify
+          - io.github.nokse22.Exhibit
+          - org.kde.ghostwriter
+          - io.gitlab.theevilskeleton.Upscaler
+          - com.bambulab.BambuStudio
+          - com.super_productivity.SuperProductivity
+          - com.nextcloud.desktopclient.nextcloud
+          - org.jitsi.jitsi-meet
+          - io.github.milkshiift.GoofCord
+
+  - sections:
+      - expand-horizontally: true
+        classes:
+          - global-section
+        light-classes:
+          - gaming-section
+        dark-classes:
+          - gaming-section-dark
+        category:
+          title: "Games"
+          subtitle: "The cake is a lie"
+          banner: file:///run/host/etc/bazaar/05-officium-bazaar.jxl
+          banner-fit: cover
+          banner-text-halign: start
+          banner-text-valign: center
+          banner-height: 550
+          appids:
+            - io.github.Faugus.faugus-launcher
+            - io.github.sharkwouter.Minigalaxy
+            - net.lutris.Lutris
+            - page.kramo.Cartridges
+            - com.valvesoftware.Steam
+            - com.valvesoftware.SteamLink
+            - org.prismlauncher.PrismLauncher
+            - org.luanti.luanti
+            - com.heroicgameslauncher.hgl
+            - org.vinegarhq.Sober
+            - com.dec05eba.gpu_screen_recorder
+            - com.vysp3r.ProtonPlus
+            - com.github.Matoking.protontricks
+            - com.discordapp.Discord
+            - com.parsecgaming.parsec
+            - net.davidotek.pupgui2
+            - org.endlessaccess.threadbare
+            - net.supertuxkart.SuperTuxKart
+            - com.github.k4zmu2a.spacecadetpinball
+            - net.stabyourself.nottetris2
+            - com.modrinth.ModrinthApp
+
+  - sections:
+      - expand-horizontally: true
+        classes:
+          - global-section
+        light-classes:
+          - utilities-section
+        dark-classes:
+          - utilities-section-dark
+        category:
+          title: "Utilities"
+          subtitle: "Stuff you didn't need until now"
+          banner: file:///run/host/etc/bazaar/06-officium-bazaar.jxl
+          banner-fit: cover
+          banner-text-halign: end
+          banner-text-valign: center
+          banner-height: 550
+          appids:
+            - app.drey.Warp
+            - org.localsend.localsend_app
+            - com.github.zocker_160.SyncThingy
+            - org.keepassxc.KeePassXC
+            - com.bitwarden.desktop
+            - io.github.nokse22.asciidraw
+            - io.github.radiolamp.mangojuice
+            - org.fedoraproject.MediaWriter
+            - org.gnome.gitlab.YaLTeR.VideoTrimmer
+            - org.raspberrypi.rpi-imager
+            - org.kde.optiimage
+            - org.mozilla.vpn
+            - hu.irl.cameractrls
+            - org.gnome.gitlab.YaLTeR.Identity
+            - io.github.BuddySirJava.SSH-Studio
+            - au.stevetech.yafi
+            - io.github.pwr_solaar.solaar
+            - com.infinipaint.infinipaint
+            - com.yubico.yubioath
+            - net.mullvad.MullvadBrowser
+            - org.fkoehler.KTailctl
+            - io.github.josephmawa.Gauge
+
+  - sections:
+      - expand-horizontally: true
+        classes:
+          - global-section
+        light-classes:
+          - dev-section
+        dark-classes:
+          - dev-section-dark
+        category:
+          title: "Developers"
+          subtitle: "Developers, developers, developers!"
+          banner: file:///run/host/etc/bazaar/07-officium-bazaar.jxl
+          banner-fit: cover
+          banner-text-halign: start
+          banner-text-valign: center
+          banner-height: 700
+          appids:
+            - io.podman_desktop.PodmanDesktop
+            - io.kinvolk.Headlamp
+            - org.gnome.Builder
+            - com.getpostman.Postman
+            - org.kde.kdevelop
+            - org.kde.kommit
+            - io.dbeaver.DBeaverCommunity
+            - org.gitfourchette.gitfourchette
+            - com.mardojai.ForgeSparks
+            - com.github.marhkb.Pods
+            - cc.arduino.IDE2
+            - io.github.plrigaux.sysd-manager
+            - me.iepure.devtoolbox
