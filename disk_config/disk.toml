@@ -1,7 +1,7 @@
 [[customizations.storage.filesystem]]
 mountpoint = "/"
 format = "btrfs"
-minsize = "20 GiB"
+minsize = "10 GiB"
 
 [[customizations.storage.filesystem]]
 mountpoint = "/boot"
