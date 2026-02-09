@@ -52,8 +52,8 @@ jobs:
         run: |
           USER_UID=$(id -u)
           USER_GID=$(id -g)
-          # Concatenate the types with a hyphen
           DISK_TYPE=$(echo "${{ matrix.disk-type }}" | tr ' ' '-')
+
           if [ "${{ matrix.variant }}" = "base" ]; then
             NAME="${{ github.event.repository.name }}"
           else
@@ -61,7 +61,7 @@ jobs:
           fi
 
           echo "IMAGE_REGISTRY=${IMAGE_REGISTRY,,}" >> ${GITHUB_ENV}
-          echo "IMAGE_NAME=${NAME,,}" >> ${GITHUB_ENV}  # Fix: uses the NAME variable
+          echo "IMAGE_NAME=${NAME,,}" >> ${GITHUB_ENV}
           echo "DISK_TYPE=${DISK_TYPE}" >> ${GITHUB_ENV}
           echo "USER_UID=${USER_UID}" >> ${GITHUB_ENV}
           echo "USER_GID=${USER_GID}" >> ${GITHUB_ENV}
@@ -90,10 +90,9 @@ jobs:
           builder-image: ${{ env.BIB_IMAGE }}
           config-file: >-
             ${{ matrix.disk-type == 'anaconda-iso'
-                ? (matrix.variant == 'nvidia' ? './disk_config/iso-nvidia.toml' : './disk_config/iso.toml')
-                : './disk_config/disk.toml'
+                && (matrix.variant == 'nvidia' && './disk_config/iso-nvidia.toml' || './disk_config/iso.toml')
+                || './disk_config/disk.toml'
             }}
-          image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
           image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
           chown: ${{ env.USER_UID }}:${{ env.USER_GID }}
           types: ${{ matrix.disk-type }}
@@ -103,6 +102,7 @@ jobs:
         if: inputs.upload-to-s3 != true && github.event_name != 'pull_request'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
+          name: ${{ env.IMAGE_NAME }}-${{ inputs.platform }}-${{ env.DISK_TYPE }}
           path: ${{ steps.build.outputs.output-directory }}
           if-no-files-found: error
           retention-days: 0
@@ -123,4 +123,4 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rclone
-          rclone copy $SOURCE_DIR S3:${{ secrets.S3_BUCKET_NAME }}
+          rclone copy $SOURCE_DIR S3:${{ secrets.S3_BUCKET_NAME }}/${{ env.IMAGE_NAME }}/${{ inputs.platform }}
