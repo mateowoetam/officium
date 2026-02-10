@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 export FLATPAK_DISABLE_SANDBOX=1
-flatpak remote-delete --system fedora
-flatpak remote-delete --system fedora-testing
 flatpak --system remote-add --if-not-exists \
 flathub https://dl.flathub.org/repo/flathub.flatpakrepo||true
 for app in \
