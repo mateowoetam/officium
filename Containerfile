@@ -38,7 +38,14 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     set -eux; \
     \
     # Run common scripts
-    for script in rpms.sh flatpak.sh system-config.sh services.sh custom.sh; do \
+    for script in rpms.sh flatpak.sh homebrew.sh system-config.sh custom.sh; do \
+        if [ -f "/ctx/$script" ]; then \
+            install -m755 "/ctx/$script" "/tmp/$script"; \
+            bash "/tmp/$script"; \
+        fi; \
+    done
+    install -Dm755 /ctx/mount-nix-overlay.sh /usr/bin/mount-nix-overlay.sh && \
+    for script in nix-overlay-service.sh nix.sh services.sh; do \
         if [ -f "/ctx/$script" ]; then \
             install -m755 "/ctx/$script" "/tmp/$script"; \
             bash "/tmp/$script"; \
