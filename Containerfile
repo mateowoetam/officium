@@ -36,15 +36,20 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,target=/var/log \
     --mount=type=tmpfs,target=/tmp \
     set -eux; \
+    # 1. Install the prerequisite script first
+    if [ -f "/ctx/mount-nix-overlay.sh" ]; then \
+        install -Dm755 /ctx/mount-nix-overlay.sh /usr/bin/mount-nix-overlay.sh; \
+    fi; \
     \
-    # Run common scripts
+    # 2. Run common scripts in order
     for script in rpms.sh flatpak.sh system-config.sh custom.sh; do \
         if [ -f "/ctx/$script" ]; then \
             install -m755 "/ctx/$script" "/tmp/$script"; \
             bash "/tmp/$script"; \
         fi; \
-    done
-    install -Dm755 /ctx/mount-nix-overlay.sh /usr/bin/mount-nix-overlay.sh && \
+    done; \
+    \
+    # 3. Run Nix/Service scripts in order
     for script in nix-overlay-service.sh nix.sh services.sh; do \
         if [ -f "/ctx/$script" ]; then \
             install -m755 "/ctx/$script" "/tmp/$script"; \
