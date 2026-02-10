@@ -21,7 +21,6 @@
 - Utilizes [Doas](https://man.openbsd.org/doas) instead of `sudo` for streamlined superuser privileges.
 - Employs [Dash](https://es.wikipedia.org/wiki/Debian_Almquist_Shell) as the default login shell for speed.
 - [Nix package manager](https://nixos.org/) included by default (nix-shell, declarative configs...)
-- [Homebrew package manager](https://brew.sh/) included by default.
 
 ## Advantages over classic Fedora
 

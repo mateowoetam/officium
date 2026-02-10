@@ -38,7 +38,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     set -eux; \
     \
     # Run common scripts
-    for script in rpms.sh flatpak.sh homebrew.sh system-config.sh custom.sh; do \
+    for script in rpms.sh flatpak.sh system-config.sh custom.sh; do \
         if [ -f "/ctx/$script" ]; then \
             install -m755 "/ctx/$script" "/tmp/$script"; \
             bash "/tmp/$script"; \
@@ -51,6 +51,14 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
             bash "/tmp/$script"; \
         fi; \
     done
+
+COPY --from=ghcr.io/ublue-os/brew:latest /system_files /
+RUN --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
+    /usr/bin/systemctl preset brew-setup.service && \
+    /usr/bin/systemctl preset brew-update.timer && \
+    /usr/bin/systemctl preset brew-upgrade.timer
 
 # -----------------------------------------------------------------------------
 # NVIDIA INSTALL (Conditional)
