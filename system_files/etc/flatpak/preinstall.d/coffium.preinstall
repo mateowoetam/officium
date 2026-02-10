@@ -1,0 +1,14 @@
+[Flatpak Preinstall io.github.kolunmi.Bazaar]
+Branch=stable
+IsRuntime=false
+Install=true
+
+[Flatpak Preinstall io.github.flattool.Warehouse]
+Branch=stable
+IsRuntime=false
+Install=true
+
+[Flatpak Preinstall org.libreoffice.LibreOffice]
+Branch=stable
+IsRuntime=false
+Install=true
