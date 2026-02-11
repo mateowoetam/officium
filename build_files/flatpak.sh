@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 export FLATPAK_DISABLE_SANDBOX=1
-dnf5 copr enable ublue-os/akmods
-dnf5 copr disable ublue-os/akmods
+dnf5 copr enable ublue-os/packages
+dnf5 copr disable ublue-os/packages
+dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:packages install uupd ublue-os-udev-rules
 dnf5 copr enable ublue-os/flatpak-test
 dnf5 copr disable ublue-os/flatpak-test
 dnf5 -y --repo=copr:copr.fedorainfracloud.org:ublue-os:flatpak-test swap flatpak flatpak
