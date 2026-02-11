@@ -9,9 +9,9 @@ dnf5 copr disable ublue-os/packages||true
 dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:packages install uupd ublue-os-udev-rules
 dnf5 copr enable ublue-os/flatpak-test
 dnf5 copr disable ublue-os/flatpak-test||true
-dnf5 -y --repo=copr:copr.fedorainfracloud.org:ublue-os:flatpak-test swap flatpak flatpak
-dnf5 -y --repo=copr:copr.fedorainfracloud.org:ublue-os:flatpak-test swap flatpak-libs flatpak-libs
-dnf5 -y --repo=copr:copr.fedorainfracloud.org:ublue-os:flatpak-test swap flatpak-session-helper flatpak-session-helper
+dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:flatpak-test swap flatpak flatpak
+dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:flatpak-test swap flatpak-libs flatpak-libs
+dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:flatpak-test flatpak-session-helper flatpak-session-helper
 flatpak --system remote-add --if-not-exists \
 flathub https://dl.flathub.org/repo/flathub.flatpakrepo||true
 flatpak update --appstream
