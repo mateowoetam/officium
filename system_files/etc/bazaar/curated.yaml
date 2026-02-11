@@ -1,3 +1,4 @@
+---
 # https://github.com/kolunmi/bazaar/blob/main/docs/overview.org
 
 css: |
@@ -194,37 +195,37 @@ rows:
             - org.jellyfin.JellyfinDesktop
 
   - sections:
-    - expand-horizontally: true
-      classes:
-        - global-section
-      light-classes:
-        - office-section
-      dark-classes:
-      - office-section-dark
-      category:
-        title: "Office & Productivity"
-        subtitle: "Let's do some work"
-        banner: file:///run/host/etc/bazaar/04-officium-bazaar.jxl
-        banner-fit: cover
-        banner-text-halign: end
-        banner-text-valign: center
-        banner-height: 550
-        appids:
-          - org.libreoffice.LibreOffice
-          - com.collaboraoffice.Office
-          - page.codeberg.censor.Censor
-          - com.slack.Slack
-          - md.obsidian.Obsidian
-          - org.onlyoffice.desktopeditors
-          - io.github.alainm23.planify
-          - io.github.nokse22.Exhibit
-          - org.kde.ghostwriter
-          - io.gitlab.theevilskeleton.Upscaler
-          - com.bambulab.BambuStudio
-          - com.super_productivity.SuperProductivity
-          - com.nextcloud.desktopclient.nextcloud
-          - org.jitsi.jitsi-meet
-          - io.github.milkshiift.GoofCord
+      - expand-horizontally: true
+        classes:
+          - global-section
+        light-classes:
+          - office-section
+        dark-classes:
+          - office-section-dark
+        category:
+          title: "Office & Productivity"
+          subtitle: "Let's do some work"
+          banner: file:///run/host/etc/bazaar/04-officium-bazaar.jxl
+          banner-fit: cover
+          banner-text-halign: end
+          banner-text-valign: center
+          banner-height: 550
+          appids:
+            - org.libreoffice.LibreOffice
+            - com.collaboraoffice.Office
+            - page.codeberg.censor.Censor
+            - com.slack.Slack
+            - md.obsidian.Obsidian
+            - org.onlyoffice.desktopeditors
+            - io.github.alainm23.planify
+            - io.github.nokse22.Exhibit
+            - org.kde.ghostwriter
+            - io.gitlab.theevilskeleton.Upscaler
+            - com.bambulab.BambuStudio
+            - com.super_productivity.SuperProductivity
+            - com.nextcloud.desktopclient.nextcloud
+            - org.jitsi.jitsi-meet
+            - io.github.milkshiift.GoofCord
 
   - sections:
       - expand-horizontally: true
