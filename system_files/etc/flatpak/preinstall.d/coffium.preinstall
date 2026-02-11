@@ -67,3 +67,8 @@ Install=true
 Branch=stable
 IsRuntime=false
 Install=true
+
+[Flatpak Preinstall app.comaps.comaps]
+Branch=stable
+IsRuntime=false
+Install=true
