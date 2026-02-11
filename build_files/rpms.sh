@@ -2,6 +2,9 @@
 set -euxo pipefail
 FEDORA_VERSION="$(rpm -E %fedora)"
 DNF_OPTS="--setopt=tsflags=nodocs --setopt=install_weak_deps=False"
+dnf5 -y copr enable ublue-os/packages
+dnf5 -y copr disable ublue-os/packages
+dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:packages install uupd ublue-os-udev-rules
 dnf5 -y --refresh upgrade
 dnf5 -y remove \
 firefox htop nvtop kfind krfb kcharselect kde-connect \
