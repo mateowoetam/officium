@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 export FLATPAK_DISABLE_SANDBOX=1
+dnf5 copr enable ublue-os/packages
+dnf5 reinstall -y flatpak krunner-bazaar --allowerasing
+dnf5 copr remove ublue-os/packages
 flatpak --system remote-add --if-not-exists \
 flathub https://dl.flathub.org/repo/flathub.flatpakrepo||true
 mkdir -p /etc/flatpak/preinstall.d
