@@ -51,62 +51,6 @@ css: |
     color: var(--fg-color);
   }
 
-  .rec-section {
-    background: linear-gradient(0deg, #85543f, #864e37);
-  }
-
-  .rec-section-dark {
-    background: linear-gradient(0deg, #85543f, #864e37);
-  }
-
-  .cc-section {
-    background: linear-gradient(0deg, #884c3d, #57280e;
-  }
-
-  .cc-section-dark {
-    background: linear-gradient(0deg, #884c3d, #57280e;
-  }
-
-  .music-section {
-    background: linear-gradient(to bottom, #16667f, #0f4561);
-  }
-
-  .music-section-dark {
-    background: linear-gradient(to bottom, #16667f, #0f4561);
-  }
-
-  .office-section {
-    background: linear-gradient(to bottom, #875839, #67462f);
-  }
-
-  .office-section-dark {
-    background: linear-gradient(to bottom, #67462f, #533520);
-  }
-
-  .gaming-section {
-    background: linear-gradient(0deg, #00affc, #fb48ad;
-  }
-
-  .gaming-section-dark {
-    background: linear-gradient(0deg, #00affc, #fb48ad;
-  }
-
-  .utilities-section {
-    background: linear-gradient(0deg, #7e796c, #694f3f);
-  }
-
-  .utilities-section-dark {
-    background: linear-gradient(0deg, #694f3f, #261908);
-  }
-
-  .dev-section {
-    background: linear-gradient(0deg, #80a92b, #28603d);
-  }
-
-  .dev-section-dark {
-    background: linear-gradient(0deg, #28603d, #162a1f);
-  }
-
 rows:
   - sections:
       - expand-horizontally: true
@@ -125,6 +69,8 @@ rows:
           banner-text-valign: center
           banner-height: 550
           appids:
+            - net.waterfox.waterfox
+            - io.gitlab.librewolf-community
             - app.comaps.comaps
             - io.github.DenysMb.Kontainer
             - org.kde.kstars
@@ -259,7 +205,6 @@ rows:
             - com.github.Matoking.protontricks
             - com.discordapp.Discord
             - com.parsecgaming.parsec
-            - net.davidotek.pupgui2
             - org.endlessaccess.threadbare
             - net.supertuxkart.SuperTuxKart
             - com.github.k4zmu2a.spacecadetpinball
@@ -287,6 +232,8 @@ rows:
             - org.localsend.localsend_app
             - com.github.zocker_160.SyncThingy
             - org.keepassxc.KeePassXC
+            - io.github.linx_systems.ClamUI
+            - org.torproject.torbrowser-launcher
             - com.bitwarden.desktop
             - io.github.nokse22.asciidraw
             - io.github.radiolamp.mangojuice

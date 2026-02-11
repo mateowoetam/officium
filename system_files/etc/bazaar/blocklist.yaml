@@ -2,7 +2,10 @@
 blocklists:
   - block:
       - app.devsuite.Ptyxis
+      - app.ytmdesktop.ytmdesktop
+      - com.adobe.Reader
       - com.brave.Browser
+      - com.geekbench.Geekbench6
       - com.google.AndroidStudio
       - com.google.Chrome
       - com.google.ChromeDev
@@ -22,20 +25,26 @@ blocklists:
       - com.microsoft.Edge
       - com.mojang.Minecraft
       - com.opera.Opera
+      - com.surfshark.Surfshark
       - com.thebrokenrail.MCPIReborn
       - com.visualstudio.code
       - com.visualstudio.code-oss
       - com.vivaldi.Vivaldi
       - com.vscodium.codium
       - com.vscodium.codium-insiders
+      - com.warlordsoftwares.youtube-downloader-4ktube
       - dev.lizardbyte.app.Sunshine
+      - io.github.hmlendea.geforcenow-electron
       - io.github.kolunmi.Bazaar
+      - io.github.N3kosempai.hetairos-ai
+      - io.github.spacingbat3.webcord
       - io.github.zyedidia.micro
       - io.mrarm.mcpelauncher
       - io.neovim.nvim
-      - org.garudalinux.firedragon
       - org.freedesktop.fwupd
+      - org.garudalinux.firedragon
       - org.gnu.emacs
+      - org.jdownloader.JDownloader
       - org.kde.ark
       - org.kde.dolphin
       - org.kde.filelight
@@ -45,11 +54,5 @@ blocklists:
       - org.kde.kwalletmanager
       - org.kde.kwalletmanager5
       - org.vim.Vim
-      - org.jdownloader.JDownloader
-      - com.adobe.Reader
+      - ru.yandex.Browser
       - tv.plex.PlexDesktop
-      - com.warlordsoftwares.youtube-downloader-4ktube
-      - io.github.spacingbat3.webcord
-      - io.github.hmlendea.geforcenow-electron
-      - app.ytmdesktop.ytmdesktop
-      - com.geekbench.Geekbench6

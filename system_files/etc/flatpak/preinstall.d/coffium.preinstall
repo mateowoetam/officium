@@ -72,3 +72,13 @@ Install=true
 Branch=stable
 IsRuntime=false
 Install=true
+
+[Flatpak Preinstall org.videolan.VLC]
+Branch=stable
+IsRuntime=false
+Install=true
+
+[Flatpak Preinstall org.kde.elisa]
+Branch=stable
+IsRuntime=false
+Install=true
