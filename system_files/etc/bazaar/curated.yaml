@@ -52,27 +52,27 @@ css: |
   }
 
   .rec-section {
-    background: linear-gradient(0deg, #7c4d39, #c3855d);
+    background: linear-gradient(0deg, #85543f, #864e37);
   }
 
   .rec-section-dark {
-    background: linear-gradient(0deg, #4e352e, #3f3634);
+    background: linear-gradient(0deg, #85543f, #864e37);
   }
 
   .cc-section {
-    background: linear-gradient(0deg, #b8a0cf, #9b59b6);
+    background: linear-gradient(0deg, #884c3d, #57280e;
   }
 
   .cc-section-dark {
-    background: linear-gradient(0deg, #392946, #050815);
+    background: linear-gradient(0deg, #884c3d, #57280e;
   }
 
   .music-section {
-    background: linear-gradient(to bottom, #F56217, #ffab7b);
+    background: linear-gradient(to bottom, #16667f, #0f4561);
   }
 
   .music-section-dark {
-    background: linear-gradient(to bottom, #F56217, #912906);
+    background: linear-gradient(to bottom, #16667f, #0f4561);
   }
 
   .office-section {
@@ -84,11 +84,11 @@ css: |
   }
 
   .gaming-section {
-    background: linear-gradient(0deg, #888a90, #67c29a);
+    background: linear-gradient(0deg, #00affc, #fb48ad;
   }
 
   .gaming-section-dark {
-    background: linear-gradient(0deg, #003a00, #444445);
+    background: linear-gradient(0deg, #00affc, #fb48ad;
   }
 
   .utilities-section {
