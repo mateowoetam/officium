@@ -5,7 +5,7 @@ rm -rf /etc/yum.repos.d/_copr_ublue-os-akmods.repo
 dnf5 copr enable ublue-os/akmods
 dnf5 copr disable ublue-os/akmods||true
 dnf5 copr enable ublue-os/packages
-dnf5 copr disable ublue-os/packages
+dnf5 copr disable ublue-os/packages||true
 dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:packages install uupd ublue-os-udev-rules
 dnf5 copr enable ublue-os/flatpak-test
 dnf5 copr disable ublue-os/flatpak-test
