@@ -41,7 +41,7 @@
 Rebase from any Fedora Atomic based distro :
 
 ```
-sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/mateowoetam/officium-base:latest
+sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/mateowoetam/officium:latest
 ```
 
 For the Nvidia enable image run this:
