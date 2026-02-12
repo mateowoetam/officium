@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -e
 mkdir -p /usr/share/nix-store
 mkdir -p /var/lib/nix-store
