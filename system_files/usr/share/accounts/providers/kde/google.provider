@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <provider id="google">
   <name>Google</name>
-  <description>GNOME-ID, Google Drive and YouTube</description>
+  <description>Includes Gmail, and Google Drive</description>
   <icon>im-google</icon>
   <translations>kaccounts-providers</translations>
   <domains>.*google\.com</domains>
@@ -21,7 +21,7 @@
             'https://www.googleapis.com/auth/userinfo.profile',
             'https://www.googleapis.com/auth/calendar',
             'https://www.googleapis.com/auth/tasks',
-            'https://www.googleapis.com/auth/drive'
+            'https://www.googleapis.com/auth/drive',
           ]</setting>
           <setting type="as" name="AllowedSchemes">['https']</setting>
           <setting name="ClientId">44438659992-7kgjeitenc16ssihbtdjbgguch7ju55s.apps.googleusercontent.com</setting>
