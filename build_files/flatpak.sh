@@ -16,9 +16,5 @@ dnf5 -y --repo=copr:copr.fedorainfracloud.org:ublue-os:flatpak-test swap flatpak
 flatpak --system remote-add --if-not-exists \
 flathub https://dl.flathub.org/repo/flathub.flatpakrepo||true
 flatpak update --appstream
-mkdir -p /etc/flatpak/preinstall.d
-if compgen -G "/ctx/custom/flatpaks/*.preinstall" >/dev/null;then
-cp /ctx/custom/flatpaks/*.preinstall /etc/flatpak/preinstall.d/
-fi
 flatpak uninstall --unused --delete-data -y --noninteractive
 flatpak repair

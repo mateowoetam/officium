@@ -50,6 +50,8 @@ For the Nvidia enable image run this:
 sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/mateowoetam/officium-nvidia:latest
 ```
 
+![](./preview.png)
+
 -----
 
 - Special Thanks to [#Universal-Blue](https://github.com/ublue-os) and their efforts to improve Linux Desktop.

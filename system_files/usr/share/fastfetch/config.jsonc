@@ -8,7 +8,7 @@
         "padding": {
             "right": 3,
         },
-        "source": "/usr/share/fastfetch/presets/ascii.txt",
+        "source": "/usr/share/fastfetch/ascii.txt",
     },
     "display": {
         "separator": ": "
