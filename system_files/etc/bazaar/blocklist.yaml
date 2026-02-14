@@ -3,8 +3,10 @@ blocklists:
   - block:
       - app.devsuite.Ptyxis
       - app.ytmdesktop.ytmdesktop
+      - com.adobe.Flash-Player-Projector
       - com.adobe.Reader
       - com.brave.Browser
+      - com.discordapp.Discord
       - com.geekbench.Geekbench6
       - com.google.AndroidStudio
       - com.google.Chrome
@@ -22,25 +24,38 @@ blocklists:
       - com.jetbrains.RubyMine
       - com.jetbrains.RustRover
       - com.jetbrains.WebStorm
+      - com.makemkv.MakeMKV
       - com.microsoft.Edge
       - com.mojang.Minecraft
       - com.opera.Opera
       - com.surfshark.Surfshark
       - com.thebrokenrail.MCPIReborn
+      - com.ticktick.TickTick
+      - com.todoist.Todoist
       - com.visualstudio.code
       - com.visualstudio.code-oss
       - com.vivaldi.Vivaldi
       - com.vscodium.codium
       - com.vscodium.codium-insiders
       - com.warlordsoftwares.youtube-downloader-4ktube
+      - com.xnview.XnConvert
+      - com.xnview.XnRetro
+      - com.xnview.XnSketch
+      - com.xnview.XnViewMP
       - dev.lizardbyte.app.Sunshine
+      - fm.cancel.Ripcord
+      - io.github.astralvixen.geforce-infinity
       - io.github.hmlendea.geforcenow-electron
       - io.github.kolunmi.Bazaar
+      - io.github.mak448a.QTCord
+      - io.github.moonlight_mod.moonlight-installer
       - io.github.N3kosempai.hetairos-ai
       - io.github.spacingbat3.webcord
+      - io.github.trigg.discover_overlay
       - io.github.zyedidia.micro
       - io.mrarm.mcpelauncher
       - io.neovim.nvim
+      - net.code_industry.MasterPDFEditor
       - org.freedesktop.fwupd
       - org.garudalinux.firedragon
       - org.gnu.emacs

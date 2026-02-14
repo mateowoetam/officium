@@ -61,9 +61,9 @@ rows:
         dark-classes:
           - rec-section-dark
         category:
-          title: "officium Recommends"
+          title: "Coffinite Recommends"
           subtitle: "Our Favorite Applications"
-          banner: file:///run/host/etc/bazaar/01-officium-bazaar.jxl
+          banner: file:///run/host/etc/bazaar/01-coffinite-bazaar.jxl
           banner-fit: cover
           banner-text-halign: start
           banner-text-valign: center
@@ -81,6 +81,7 @@ rows:
             - io.github.nozwock.Packet
             - com.github.ADBeveridge.Raider
             - org.gimp.GIMP
+            - org.gnome.gitlab.somas.Apostrophe
 
   - sections:
       - expand-horizontally: true
@@ -93,7 +94,7 @@ rows:
         category:
           title: "Content Creation"
           subtitle: "Create your first donut or make some tunes"
-          banner: file:///run/host/etc/bazaar/02-officium-bazaar.jxl
+          banner: file:///run/host/etc/bazaar/02-coffinite-bazaar.jxl
           banner-fit: cover
           banner-text-halign: end
           banner-text-valign: center
@@ -122,7 +123,7 @@ rows:
         category:
           title: "Music & Media"
           subtitle: "Let me break it down for you"
-          banner: file:///run/host/etc/bazaar/03-officium-bazaar.jxl
+          banner: file:///run/host/etc/bazaar/03-coffinite-bazaar.jxl
           banner-fit: cover
           banner-text-halign: start
           banner-text-valign: center
@@ -130,6 +131,7 @@ rows:
           appids:
             - org.kde.elisa
             - org.videolan.VLC
+            - org.kde.amarok
             - de.haeckerfelix.Shortwave
             - tv.plex.PlexDesktop
             - org.kde.kasts
@@ -151,7 +153,7 @@ rows:
         category:
           title: "Office & Productivity"
           subtitle: "Let's do some work"
-          banner: file:///run/host/etc/bazaar/04-officium-bazaar.jxl
+          banner: file:///run/host/etc/bazaar/04-coffinite-bazaar.jxl
           banner-fit: cover
           banner-text-halign: end
           banner-text-valign: center
@@ -184,7 +186,7 @@ rows:
         category:
           title: "Games"
           subtitle: "The cake is a lie"
-          banner: file:///run/host/etc/bazaar/05-officium-bazaar.jxl
+          banner: file:///run/host/etc/bazaar/05-coffinite-bazaar.jxl
           banner-fit: cover
           banner-text-halign: start
           banner-text-valign: center
@@ -222,7 +224,7 @@ rows:
         category:
           title: "Utilities"
           subtitle: "Stuff you didn't need until now"
-          banner: file:///run/host/etc/bazaar/06-officium-bazaar.jxl
+          banner: file:///run/host/etc/bazaar/06-coffinite-bazaar.jxl
           banner-fit: cover
           banner-text-halign: end
           banner-text-valign: center
@@ -252,6 +254,7 @@ rows:
             - net.mullvad.MullvadBrowser
             - org.fkoehler.KTailctl
             - io.github.josephmawa.Gauge
+            - com.usebottles.bottles
 
   - sections:
       - expand-horizontally: true
@@ -264,11 +267,11 @@ rows:
         category:
           title: "Developers"
           subtitle: "Developers, developers, developers!"
-          banner: file:///run/host/etc/bazaar/07-officium-bazaar.jxl
+          banner: file:///run/host/etc/bazaar/07-coffinite-bazaar.jxl
           banner-fit: cover
           banner-text-halign: start
           banner-text-valign: center
-          banner-height: 700
+          banner-height: 550
           appids:
             - io.podman_desktop.PodmanDesktop
             - io.kinvolk.Headlamp
