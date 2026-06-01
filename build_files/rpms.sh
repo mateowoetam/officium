@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 FEDORA_VERSION="$(rpm -E %fedora)"
-DNF_OPTS="--setopt=tsflags=nodocs --setopt=install_weak_deps=False"
+DNF_OPTS="--setopt=tsflags=nodocs --setopt=install_weak_deps=False --setopt=max_parallel_downloads=2"
 dnf5 -y copr enable ublue-os/packages
 dnf5 -y copr disable ublue-os/packages
 dnf5 -y --enablerepo copr:copr.fedorainfracloud.org:ublue-os:packages install uupd ublue-os-udev-rules

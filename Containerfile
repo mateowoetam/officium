@@ -25,6 +25,8 @@ LABEL \
 # Prepare directories
 RUN rm -rf /opt && mkdir -p /opt
 
+RUN mkdir -p /etc/dnf/ && \
+    echo -e "[main]\nmax_parallel_downloads=2\nclean_requirements_on_remove=True" > /etc/dnf/dnf.conf
 
 # -----------------------------------------------------------------------------
 # BUILD PHASE
