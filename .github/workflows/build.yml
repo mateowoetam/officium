@@ -125,8 +125,8 @@ jobs:
             VARIANT=${{ matrix.container.name }}
             IMAGE_NAME=${{ env.IMAGE_NAME }}
           extra-args: |
-            --memory=6g
-            --jobs=2
+            --memory=5g
+            --jobs=1
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
