@@ -1,0 +1,12 @@
+[Unit]
+Description=Bind mount /var/nix to /nix
+Before=nix-daemon.service
+
+[Mount]
+What=/var/nix
+Where=/nix
+Type=none
+Options=bind
+
+[Install]
+WantedBy=local-fs.target
